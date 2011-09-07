@@ -1,0 +1,49 @@
+<?php
+
+// $Id$
+
+
+function islandora_pdf_sp_required_fedora_objects() {
+
+
+  $module_path = drupal_get_path('module', 'islandora_pdf_sp');
+
+  // array( 'path-to-foxml-file', 'pid', 'dsid', 'path-to-datastream-file', int dsversion, boolean required)
+  // make database insertions here.
+
+
+  return array(
+    'islandora_pdf_sp' => array(
+      'module' => 'islandora_pdf_sp',
+      'title' => 'Islandora PDF Solution Pack',
+      'objects' => array(
+        array(
+          'pid' => 'islandora:sp_strict_pdf',
+          'label' => 'Islandora strict PDF content model',
+          'dsid' => 'ISLANDORACM',
+          'datastream_file' => "$module_path/xml/STRICT_SP_PDFCM.xml",
+          'cmodel' => 'fedora-system:ContentModel-3.0',
+        ),
+
+        array(
+          'pid' => 'islandora:sp_pdf_collection',
+          'label' => 'Islandora PDF Collection',
+          'cmodel' => 'islandora:collectionCModel',
+          'parent' => 'islandora:top',
+          'datastreams' => array(
+            array(
+              'dsid' => 'TN',
+              'datastream_file' => "$module_path/images/Crystal_Clear_mimetype_pdf.png",
+              'mimetype' => 'image/png',
+            ),
+            array(
+              'dsid' => 'COLLECTION_POLICY',
+              'datastream_file' => "$module_path/xml/PDF-COLLECTION POLICY.xml",
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+

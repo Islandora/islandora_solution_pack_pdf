@@ -1,3 +1,2 @@
 PDF Solution Pack for Islandora
-Load all required Fedor Objects, and creates empty collection object
-to accept ingested PDF's.
+Loads all required Fedora Objects, and creates an empty collection object to accept ingested PDF's.

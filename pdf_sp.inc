@@ -1,9 +1,8 @@
-
 <?php
 
 // $Id$
 
-class ImageManipulation {
+class PDFManipulation {
 
   function PDFManipulation() {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');

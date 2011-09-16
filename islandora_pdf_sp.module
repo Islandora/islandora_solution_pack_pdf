@@ -30,7 +30,28 @@ function islandora_pdf_sp_required_fedora_objects() {
     $object->form = $form_as_string;
     $result = drupal_write_record('xml_forms', $object);
   }
- 
+
+  $result = db_result(db_query('Select content_model from {islandora_content_model_forms} where  content_model = "%s" and form_name = "%s"', 'islandora:bookCModel', 'Islandora PDF MODS Form'));
+  if (!$result) {
+    $object = new stdClass();
+    $object->content_model = 'islandora:bookCModel';
+    $object->form_name = 'Islandora PDF MODS Form';
+    $object->dsid = 'MODS';
+    $object->title_field = "['titleInfo']['title']";
+    $object->transform = 'mods_to_dc.xsl';
+    $result = drupal_write_record('islandora_content_model_forms', $object);
+  }
+
+  $result = db_result(db_query('Select content_model from {islandora_content_model_forms} where  content_model = "%s" and form_name = "%s"', 'islandora:bookCModel', 'Upload PDF Existing Mods'));
+  if (!$result) {
+    $object = new stdClass();
+    $object->content_model = 'islandora:bookCModel';
+    $object->form_name = 'Upload PDF Existing Mods';
+    $object->dsid = 'MODS';
+    $object->title_field = "['title']";
+    $object->transform = 'mods_to_dc.xsl';
+    $result = drupal_write_record('islandora_content_model_forms', $object);
+  }
 
   return array(
     'islandora_pdf_sp' => array(

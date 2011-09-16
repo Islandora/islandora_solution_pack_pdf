@@ -8,12 +8,10 @@ function islandora_pdf_sp_required_fedora_objects() {
 
   $module_path = drupal_get_path('module', 'islandora_pdf_sp');
 
-  // array( 'path-to-foxml-file', 'pid', 'dsid', 'path-to-datastream-file', int dsversion, boolean required)
-  // make database insertions here.
- //add default mods form to formbuilder table
+  // Put the form in the database
   $result = db_result(db_query('Select name from {xml_forms} where name = "%s"', 'Islandora PDF MODS Form'));
   if (!$result) {
-    $filename = "$module_path/xml/mods_article.xml";
+    $filename = "$module_path/xml/mods_articles.xml";
     $form_as_string = file_get_contents($filename);
     $object = new stdClass();
     $object->name = 'Islandora PDF MODS Form';
@@ -21,34 +19,14 @@ function islandora_pdf_sp_required_fedora_objects() {
     $result = drupal_write_record('xml_forms', $object);
   }
 
-  $result = db_result(db_query('Select name from {xml_forms} where name = "%s"', 'Upload Existing PDF Mods'));
-  if (!$result) {
-    $filename = "$module_path/xml/mods_article.xml";
-    $form_as_string = file_get_contents($filename);
-    $object = new stdClass();
-    $object->name = 'Upload Existing PDF Mods';
-    $object->form = $form_as_string;
-    $result = drupal_write_record('xml_forms', $object);
-  }
-
-  $result = db_result(db_query('Select content_model from {islandora_content_model_forms} where  content_model = "%s" and form_name = "%s"', 'islandora:bookCModel', 'Islandora PDF MODS Form'));
+  // Associates the form with the content model
+  $result = db_result(db_query('Select content_model from {islandora_content_model_forms} where  content_model = "%s" and form_name = "%s"', 'islandora:sp_strict_pdf', 'Islandora PDF MODS Form'));
   if (!$result) {
     $object = new stdClass();
-    $object->content_model = 'islandora:bookCModel';
+    $object->content_model = 'islandora:sp_strict_pdf';
     $object->form_name = 'Islandora PDF MODS Form';
     $object->dsid = 'MODS';
     $object->title_field = "['titleInfo']['title']";
-    $object->transform = 'mods_to_dc.xsl';
-    $result = drupal_write_record('islandora_content_model_forms', $object);
-  }
-
-  $result = db_result(db_query('Select content_model from {islandora_content_model_forms} where  content_model = "%s" and form_name = "%s"', 'islandora:bookCModel', 'Upload PDF Existing Mods'));
-  if (!$result) {
-    $object = new stdClass();
-    $object->content_model = 'islandora:bookCModel';
-    $object->form_name = 'Upload PDF Existing Mods';
-    $object->dsid = 'MODS';
-    $object->title_field = "['title']";
     $object->transform = 'mods_to_dc.xsl';
     $result = drupal_write_record('islandora_content_model_forms', $object);
   }

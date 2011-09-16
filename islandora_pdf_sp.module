@@ -23,7 +23,7 @@ function islandora_pdf_sp_required_fedora_objects() {
 
   $result = db_result(db_query('Select name from {xml_forms} where name = "%s"', 'Upload Existing PDF Mods'));
   if (!$result) {
-    $filename = "$module_path/xml/modes_article.xml";
+    $filename = "$module_path/xml/mods_article.xml";
     $form_as_string = file_get_contents($filename);
     $object = new stdClass();
     $object->name = 'Upload Existing PDF Mods';

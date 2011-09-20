@@ -48,7 +48,7 @@ function islandora_pdf_sp_required_fedora_objects() {
           'pid' => 'islandora:sp_pdf_collection',
           'label' => 'Islandora PDF Collection',
           'cmodel' => 'islandora:collectionCModel',
-          'parent' => 'islandora:top',
+          'parent' => variable_get('fedora_repository_pid', 'islandora:root'),
           'datastreams' => array(
             array(
               'dsid' => 'TN',

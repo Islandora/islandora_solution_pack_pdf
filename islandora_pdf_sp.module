@@ -2,6 +2,7 @@
 
 // $Id$
 
+define('ISLANDORA_PDF_SP_MODS_FORM_NAME', 'Islandora PDF MODS Form');
 
 function islandora_pdf_sp_required_fedora_objects() {
 
@@ -9,14 +10,11 @@ function islandora_pdf_sp_required_fedora_objects() {
   $module_path = drupal_get_path('module', 'islandora_pdf_sp');
 
   // Put the form in the database
-  $result = db_result(db_query('Select name from {xml_forms} where name = "%s"', 'Islandora PDF MODS Form'));
-  if (!$result) {
-    $filename = "$module_path/xml/mods_articles.xml";
-    $form_as_string = file_get_contents($filename);
-    $object = new stdClass();
-    $object->name = 'Islandora PDF MODS Form';
-    $object->form = $form_as_string;
-    $result = drupal_write_record('xml_forms', $object);
+  module_load_include('inc', 'xml_form_builder', 'XMLFormDatabase');
+  if (!XMLFormDatabase::Exists(ISLANDORA_PDF_SP_MODS_FORM_NAME)) {
+    $definition = new DOMDocument();
+    $definition->load($module_path . '/xml/mods_article.xml');
+    XMLFormDatabase::Create(ISLANDORA_PDF_SP_MODS_FORM_NAME, $definition);
   }
 
   // Associates the form with the content model
@@ -48,7 +46,7 @@ function islandora_pdf_sp_required_fedora_objects() {
           'pid' => 'islandora:sp_pdf_collection',
           'label' => 'Islandora PDF Collection',
           'cmodel' => 'islandora:collectionCModel',
-          'parent' => 'islandora:top',
+          'parent' => variable_get('fedora_repository_pid', 'islandora:root'),
           'datastreams' => array(
             array(
               'dsid' => 'TN',

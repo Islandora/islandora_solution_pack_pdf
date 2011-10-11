@@ -1,7 +1,7 @@
 ; $Id$ 
 name = Islandora PDF Solution Pack
 description = Islandora configurations for persisting and retrieving pdf files
-dependencies[] = islandora_repository
+dependencies[] = fedora_repository
 package = Islandora Solution Pack
 version = 11.2.beta2
 core = 6.x

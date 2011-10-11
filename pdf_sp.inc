@@ -5,7 +5,7 @@
 class PDFManipulation {
 
   function PDFManipulation() {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'islandora_repository', 'ObjectHelper');
   }
 
   function createPreview($parameterArray, $dsid, $file, $file_ext) {

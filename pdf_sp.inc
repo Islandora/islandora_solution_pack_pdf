@@ -1,13 +1,30 @@
 <?php
 
-// $Id$
+/**
+ * @file 
+ * PDFManipulation class
+ */
 
+/**
+ * PDFManipulation
+ */
 class PDFManipulation {
 
+  /**
+   * Constructor
+   */
   function PDFManipulation() {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
   }
 
+  /**
+   * Create preview
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return string 
+   */
   function createPreview($parameterArray, $dsid, $file, $file_ext) {
     $system = getenv('System');
     $file_suffix = '_' . $dsid . '.' . $file_ext;
@@ -44,6 +61,14 @@ class PDFManipulation {
     }
   }
 
+  /**
+   * Create PNG
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return string 
+   */
   function createPNG($parameterArray = NULL, $dsid, $file, $file_ext) {
     $file_suffix = '_' . $dsid . '.' . $file_ext;
     $returnValue = TRUE;
@@ -64,6 +89,14 @@ class PDFManipulation {
     }
   }
 
+  /**
+   * Create JPEG 2000
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return type 
+   */
   function createJP2($parameterArray = NULL, $dsid, $file, $file_ext) {
     $file_suffix = "_$dsid.$file_ext";
     $return_value = TRUE;
@@ -110,7 +143,14 @@ class PDFManipulation {
     }
   }
 
-  //use imagemapi to manipulate images instead of going directly to imagemagick or whatever
+  /**
+   * Use imagemapi to manipulate images instead of going directly to imagemagick or whatever
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return type 
+   */
   function manipulateImage($parameterArray = NULL, $dsid, $file, $file_ext) {
     $height = $parameterArray['height'];
     $width = $parameterArray['width'];
@@ -146,6 +186,14 @@ class PDFManipulation {
     }
   }
 
+  /**
+   * Create thumbnail from pdf
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return boolean 
+   */
   function createThumbnailFromPDF($parameterArray, $dsid, $file, $file_ext) {
     $height = $parameterArray['height'];
     $width = $parameterArray['width'];
@@ -154,7 +202,7 @@ class PDFManipulation {
     //system("convert $file\[0\] -thumbnail 128x128 $uploaddir$thumb");
     // Use this for Linux.
     if (stristr($_SERVER['SERVER_SOFTWARE'], 'microsoft')) {
-
+      
     }
     elseif (stristr($_SERVER['SERVER_SOFTWARE'], 'linux')) {
       $cmdline = "/usr/local/bin/convert \"$file\"\[0\] -colorspace RGB -thumbnail $width" . "x$height \"$file$file_suffix\"";
@@ -180,6 +228,14 @@ class PDFManipulation {
     }
   }
 
+  /**
+   * Create a thumbnail
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return boolean 
+   */
   function createThumbnail($parameterArray, $dsid, $file, $file_ext) {
     // var_dump($parameterArray);exit(0);
     $file_suffix = '_' . $dsid . '.' . $file_ext;

@@ -14,7 +14,7 @@ class PDFManipulation {
    * Constructor
    */
   function PDFManipulation() {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   }
 
   /**

@@ -55,7 +55,7 @@ function islandora_pdf_sp_required_fedora_objects() {
           'datastreams' => array(
             array(
               'dsid' => 'TN',
-              'datastream_file' => "$module_path/images/Crystal_Clear_mimetype_pdf.png",
+              'datastream_file' => "$module_path/images/Crystal_Clear_filesystem_folder_grey.png",
               'mimetype' => 'image/png',
             ),
             array(

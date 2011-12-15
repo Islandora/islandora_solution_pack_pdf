@@ -18,7 +18,7 @@
   </ingest_rules>
   <datastreams>
     <datastream dsid="TN">
-      <display_method class="ShowStreamsInFieldSets" file="plugins/ShowStreamsInFieldSets.inc" method="showPDFPreview" module=""/>
+      <display_method class="PDFManipulation" file="pdf_sp.inc" method="showPDFPreview" module="islandora_pdf_sp"/>
     </datastream>
     <datastream dsid="OBJ">
       <add_datastream_method class="PDFManipulation" dsid="TN" file="pdf_sp.inc"

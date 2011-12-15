@@ -13,8 +13,9 @@ class PDFManipulation {
   /**
    * Constructor
    */
-  function PDFManipulation() {
+  function PDFManipulation($pid = null) {
     module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
+    $this->pid = $pid;
   }
 
   /**
@@ -254,4 +255,43 @@ class PDFManipulation {
     }
   }
 
+    function showPDFPreview() {
+    global $base_url;
+    global $base_path;
+    global $user;
+    module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+    $objectHelper = new ObjectHelper();
+    $item = new Fedora_Item($this->pid);
+    if (key_exists('TN', $item->datastreams)) {
+      $tn_url = $base_url . '/fedora/repository/' . $item->pid . '/TN';
+    }
+    else {
+      $tn_url = $base_path . drupal_get_path('module', 'fedora_repository') . '/images/Crystal_Clear_app_download_manager.png';
+    }
+
+    $dl_link = l('<div  style="float:left; padding: 10px"><img src="' . $tn_url . '"><br />View Document</div>', 'fedora/repository/' . $this->pid . '/OBJ', array('html' => TRUE));
+
+    $tabset = array();
+
+    $tabset['first_tab'] = array(
+      '#type' => 'tabpage',
+      '#title' => t('PDF'),
+      '#content' => $dl_link,
+    );
+
+
+
+
+    $tabset['second_tab'] = array(
+      '#type' => 'tabpage',
+      '#title' => t('Read Online'),
+      '#content' => "<iframe src=\"http://docs.google.com/viewer?url=" . $base_url . '/fedora/repository/' .
+      $this->pid . '/OBJ/preview.pdf' . "&embedded=TRUE\" style=\"width:600px; height:500px;\" frameborder=\"0\"></iframe>"
+    );
+
+    // Render the tabset.
+    return $tabset;
+  }
+
 }
+

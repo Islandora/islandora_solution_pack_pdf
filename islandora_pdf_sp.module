@@ -12,28 +12,12 @@ define('ISLANDORA_PDF_SP_MODS_FORM_NAME', 'Islandora PDF MODS Form');
  */
 function islandora_pdf_sp_required_fedora_objects() {
 
-
+  // Add the form and associate it to the content model
   $module_path = drupal_get_path('module', 'islandora_pdf_sp');
-
-  // Put the form in the database
-  module_load_include('inc', 'xml_form_builder', 'XMLFormDatabase');
-  if (!XMLFormDatabase::Exists(ISLANDORA_PDF_SP_MODS_FORM_NAME)) {
-    $definition = new DOMDocument();
-    $definition->load($module_path . '/xml/mods_article.xml');
-    XMLFormDatabase::Create(ISLANDORA_PDF_SP_MODS_FORM_NAME, $definition);
-  }
-
-  // Associates the form with the content model
-  $result = db_result(db_query('Select content_model from {islandora_content_model_forms} where  content_model = "%s" and form_name = "%s"', 'islandora:sp_strict_pdf', 'Islandora PDF MODS Form'));
-  if (!$result) {
-    $object = new stdClass();
-    $object->content_model = 'islandora:sp_strict_pdf';
-    $object->form_name = 'Islandora PDF MODS Form';
-    $object->dsid = 'MODS';
-    $object->title_field = "['titleInfo']['title']";
-    $object->transform = 'mods_to_dc.xsl';
-    $result = drupal_write_record('islandora_content_model_forms', $object);
-  }
+  $form_name = 'Islandora PDF MODS Form';
+  $form_xml = file_get_contents("$module_path/xml/mods_pdf.xml");
+  solution_pack_add_form($form_name, $form_xml);
+  solution_pack_add_form_association('islandora:sp_strict_pdf', $form_name);
 
   return array(
     'islandora_pdf_sp' => array(

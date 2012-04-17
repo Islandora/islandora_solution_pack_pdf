@@ -11,6 +11,7 @@ define('ISLANDORA_PDF_SP_MODS_FORM_NAME', 'Islandora PDF MODS Form');
  * @return type 
  */
 function islandora_pdf_sp_required_fedora_objects() {
+  module_load_include('inc', 'fedora_repository', 'fedora_repository.solutionpacks');
 
   // Add the form and associate it to the content model
   $module_path = drupal_get_path('module', 'islandora_pdf_sp');

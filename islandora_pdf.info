@@ -1,0 +1,8 @@
+name = "Islandora Pdf"
+description = "Islandora Repository PDF Module"
+dependencies[] = islandora
+dependencies[] = imagemagick
+package = Islandora
+core = 7.x
+configure = admin/islandora/pdf
+stylesheets[all][] = css/islandora_pdf.theme.css

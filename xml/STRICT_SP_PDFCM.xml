@@ -13,7 +13,7 @@
             <parameter name="height">120</parameter>
           </parameters>
         </ingest_method>
-        <ingest_method class="fits" dsid="FITS" file="plugins/fits.inc" method="extractFits" module="fedora_repository" modified_files_ext="">
+        <ingest_method class="fits" dsid="TECHMD_FITS" file="plugins/fits.inc" method="extractFits" module="fedora_repository" modified_files_ext="">
         </ingest_method>
       </ingest_methods>
     </rule>
@@ -31,7 +31,7 @@
         </parameters>
       </add_datastream_method>
     </datastream>
-    <datastream dsid="FITS"/>
+    <datastream dsid="TECHMD_FITS"/>
   </datastreams>
   <ingest_form dsid="QDC" page="2">
     <form_builder_method class="FormBuilder" file="plugins/FormBuilder.inc" handler="handleQDCForm"

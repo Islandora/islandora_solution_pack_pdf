@@ -13,6 +13,8 @@
             <parameter name="height">120</parameter>
           </parameters>
         </ingest_method>
+        <ingest_method class="fits" dsid="TECHMD_FITS" file="plugins/fits.inc" method="extractFits" module="fedora_repository" modified_files_ext="">
+        </ingest_method>
       </ingest_methods>
     </rule>
   </ingest_rules>
@@ -29,5 +31,6 @@
         </parameters>
       </add_datastream_method>
     </datastream>
+    <datastream dsid="TECHMD_FITS"/>
   </datastreams>
 </content_model>

@@ -1,23 +1,22 @@
 <?php
 /**
- * @file image.process.inc
- *
+ * @file
  * This file contains all the functions for image manipulation used in the
- * basic image solution pack.
+ * pdf solution pack.
  */
 
 /**
  * creates the derivatives for this content model type
  * @param object $object
  *   tuque FedoraObject
- * @return string 
+ * @return string
  */
 function islandora_pdf_create_all_derivatives($object) {
   module_load_include('inc', 'islandora', 'includes/mime.detect');
 
   $mime_class = new MimeDetect();
   if (!isset($object['OBJ'])) {
-    drupal_set_message(t('Could not create image derivatives for %s.  No image file was uploaded.', array('%s' => $object->id)),'error');
+    drupal_set_message(t('Could not create image derivatives for %s.  No image file was uploaded.', array('%s' => $object->id)), 'error');
     return "";
   }
 
@@ -35,7 +34,7 @@ function islandora_pdf_create_all_derivatives($object) {
 
 /**
  *
- * @param object $file 
+ * @param object $file
  *   stdclass
  */
 function islandora_pdf_create_derivative($original, $object, $dsid, $width, $height) {
@@ -61,7 +60,7 @@ function islandora_pdf_create_derivative($original, $object, $dsid, $width, $hei
   if (_imagemagick_convert_exec($command, $output, $error) !== TRUE) {
     return FALSE;
   }
-  
+
   islandora_pdf_add_derivative($object, $dsid, $dest);
   file_unmanaged_delete($dest);
 }

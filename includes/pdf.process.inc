@@ -2,7 +2,7 @@
 /**
  * @file
  * This file contains all the functions for image manipulation used in the
- * basic image solution pack.
+ * pdf solution pack.
  */
 
 /**

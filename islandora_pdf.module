@@ -34,17 +34,12 @@ function islandora_pdf_menu() {
  */
 function islandora_pdf_theme($existing, $type, $theme, $path) {
   return array(
-    'islandora_pdf_objects' => array(
-      'file' => 'theme/islandora_pdf.theme.inc',
-      'template' => 'islandora-basic-image-view-objects',
-      'variables' => array('islandora_objects' => NULL),
-    ),
     'islandora_pdf' => array(
       'file' => 'theme/islandora_pdf.theme.inc',
       'template' => 'theme/islandora-pdf',
       'pattern' => 'islandora_pdf__', //we can add pids to the end of this pattern in our preprocess function
       // and templates will be able to have have a pid appended to the template name to overide a template on a per object basis
-      //an example template would be named islandora-basic-image--islandora-27.tpl.phps
+      //an example template would be named islandora-pdf--islandora-27.tpl.phps
       'variables' => array('islandora_object' => NULL),
     )
   );
@@ -63,7 +58,7 @@ function islandora_pdf_islandora_get_types() {
 }
 
 /**
- * this modules implentation of view_object hook will handle objects of type islandora:basicImageCModel and  islandora:sp_basic_image
+ * this modules implentation of view_object hook will handle objects of type islandora:pdfCModel and  islandora:sp_pdf
  * as registered in its return types
  * Other modules would handle objects of other types.
  * @param Object $object

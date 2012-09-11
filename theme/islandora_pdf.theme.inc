@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * This file contains all theme and preprocess functions
+ */
+
+/**
  *
  * @global type $base_url
  * @param array $variables

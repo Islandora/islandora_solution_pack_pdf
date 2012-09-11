@@ -1,29 +1,12 @@
 <?php
 
 /*
- * @file islandora_basic_image.module
- * 
- * an Islandora module to handle basic image cmodels 
- * 
- * 
- * This file is part of Islandora.
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the program.  If not, see <http ://www.gnu.org/licenses/>.
+ * @file
+ * An Islandora module to handle basic pdf cmodels
  */
 
 /**
- * Implementation of hook_menu. 
+ * Implements hook_menu().
  * If you need to add secondary tabs to either view or manage you would create a
  * hook_menu function similar to below.  You would also need to create an access function
  * to tell islandora when to show your tabs.  There is an example below.
@@ -43,7 +26,7 @@ function islandora_pdf_menu() {
 }
 
 /**
- * Theme registry function
+ * Implements hook_theme().
  * We supply a pattern so we can overide templates at the theme level if needed.
  * we can append a pid to a template and the new template file will be called (the pids
  * colon should be replaced with a dash)
@@ -70,7 +53,7 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
 /**
  * tells the main module what types of objects we support.  This is used to determine whether or not
  * this module should attempt to respond.
- * @return array 
+ * @return array
  *   array of content model pids that this module supports
  */
 function islandora_pdf_islandora_get_types() {
@@ -106,11 +89,11 @@ function islandora_pdf_islandora_view_object($object, $user, $page_number, $page
 
 function islandora_pdf_islandora_ingest_post_ingest($object) {
   $cmodel_list = islandora_pdf_islandora_get_types();
-  if(!isset($cmodel_list)){
+  if (!isset($cmodel_list)) {
     return ;
   }
   $models = $object->models;
-  if(!isset($models)){
+  if (!isset($models)) {
     return ;
   }
   foreach ($models as $model) {

@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @file
+ * This file contains all admin functions
+ */
+
+/**
+ * Admin form function
+ */
 function islandora_pdf_admin() {
   $form = array();
 
@@ -50,18 +58,20 @@ function islandora_pdf_admin() {
   return system_settings_form($form);
 }
 
-
+/**
+ * Admin form validate function
+ */
 function islandora_pdf_admin_validate($form, &$form_state) {
-  if(!is_numeric($form_state['values']['islandora_pdf_thumbnail_width'])) {
+  if (!is_numeric($form_state['values']['islandora_pdf_thumbnail_width'])) {
     form_set_error('islandora_pdf_thumbnail_width', t('Please enter a numeric value.'));
   }
-  if(!is_numeric($form_state['values']['islandora_pdf_thumbnail_height'])) {
+  if (!is_numeric($form_state['values']['islandora_pdf_thumbnail_height'])) {
     form_set_error('islandora_pdf_thumbnail_height', t('Please enter a numeric value.'));
   }
-  if(!is_numeric($form_state['values']['islandora_pdf_preview_width'])) {
+  if (!is_numeric($form_state['values']['islandora_pdf_preview_width'])) {
     form_set_error('islandora_pdf_preview_width', t('Please enter a numeric value.'));
   }
-  if(!is_numeric($form_state['values']['islandora_pdf_preview_height'])) {
+  if (!is_numeric($form_state['values']['islandora_pdf_preview_height'])) {
     form_set_error('islandora_pdf_preview_height', t('Please enter a numeric value.'));
   }
 }

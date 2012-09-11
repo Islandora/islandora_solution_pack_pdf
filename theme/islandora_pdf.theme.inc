@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * This file contains all theme and preprocess functions
+ */
+
+/**
  *
  * @global type $base_url
  * @param array $variables
@@ -23,7 +28,7 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
   $variables['dc_array'] = isset($dc_object) ? $dc_object->as_formatted_array() : array();
   $variables['islandora_object_label'] = $islandora_object->label;
-  $variables['theme_hook_suggestions'][] = 'islandora_basic_image__' . str_replace(':', '_', $islandora_object->id);
+  $variables['theme_hook_suggestions'][] = 'islandora_pdf__' . str_replace(':', '_', $islandora_object->id);
   $variables['parent_collections'] = islandora_datastream_get_parents($islandora_object);
   global $base_url;
   if (isset($islandora_object['OBJ'])) {

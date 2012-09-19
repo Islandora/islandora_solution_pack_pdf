@@ -74,7 +74,7 @@ function islandora_pdf_islandora_required_objects() {
         ),
         array(
           'pid' => 'islandora:sp_pdf_collection',
-          'label' => 'Islandora PDF collection',
+          'label' => 'PDF collection',
           'cmodel' => 'islandora:collectionCModel',
           'parent' => 'islandora:root',
           'datastreams' => array(

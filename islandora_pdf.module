@@ -46,6 +46,60 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
 }
 
 /**
+ * Implements hook_islandora_required_objects().
+ */
+function islandora_pdf_islandora_required_objects() {
+
+  // module path
+  $module_path = drupal_get_path('module', 'islandora_pdf');
+
+  return array(
+    'islandora_pdf' => array(
+      'module' => 'islandora_pdf',
+      'title' => 'Islandora PDF',
+      'objects' => array(
+         array(
+          'pid' => 'islandora:sp_pdf',
+          'label' => 'Islandora PDF content model',
+          'cmodel' => 'fedora-system:ContentModel-3.0',
+          'datastreams' => array(
+            array(
+              'dsid' => 'DS-COMPOSITE-MODEL',
+              'label' => 'DS-COMPOSITE-MODEL',
+              'mimetype' => 'text/xml',
+              'control_group' => 'X',
+              'datastream_file' => "$module_path/xml/islandora_pdf_ds_composite_model.xml",              
+            ),
+          ),
+        ),
+        array(
+          'pid' => 'islandora:sp_pdf_collection',
+          'label' => 'Islandora PDF collection',
+          'cmodel' => 'islandora:collectionCModel',
+          'parent' => 'islandora:root',
+          'datastreams' => array(
+            array(
+              'dsid' => 'COLLECTION_POLICY',
+              'label' => 'Collection policy',
+              'mimetype' => 'text/xml',
+              'control_group' => 'X',
+              'datastream_file' => "$module_path/xml/islandora_pdf_collection_policy.xml",
+            ),
+            array(
+              'dsid' => 'TN',
+              'label' => 'Thumbnail',
+              'mimetype' => 'image/png',
+              'control_group' => 'M',
+              'datastream_file' => "$module_path/images/folder.png",
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/**
  * tells the main module what types of objects we support.  This is used to determine whether or not
  * this module should attempt to respond.
  * @return array

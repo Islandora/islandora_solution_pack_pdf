@@ -57,7 +57,7 @@ function islandora_pdf_islandora_required_objects() {
     'islandora_pdf' => array(
       'title' => 'Islandora PDF',
       'objects' => array(
-         array(
+        array(
           'pid' => 'islandora:sp_pdf',
           'label' => 'Islandora PDF content model',
           'cmodel' => 'fedora-system:ContentModel-3.0',
@@ -67,7 +67,7 @@ function islandora_pdf_islandora_required_objects() {
               'label' => 'DS-COMPOSITE-MODEL',
               'mimetype' => 'text/xml',
               'control_group' => 'X',
-              'datastream_file' => "$module_path/xml/islandora_pdf_ds_composite_model.xml",              
+              'datastream_file' => "$module_path/xml/islandora_pdf_ds_composite_model.xml",
             ),
           ),
         ),

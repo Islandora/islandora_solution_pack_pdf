@@ -49,7 +49,6 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
  * Implements hook_islandora_required_objects().
  */
 function islandora_pdf_islandora_required_objects() {
-
   // module path
   $module_path = drupal_get_path('module', 'islandora_pdf');
 
@@ -99,57 +98,33 @@ function islandora_pdf_islandora_required_objects() {
 }
 
 /**
- * tells the main module what types of objects we support.  This is used to determine whether or not
- * this module should attempt to respond.
- * @return array
- *   array of content model pids that this module supports
+ * Implements hook_islandora_get_types().
  */
 function islandora_pdf_islandora_get_types() {
-  $types = array();
-  $types['islandora:sp_pdf'][ISLANDORA_VIEW_HOOK] = TRUE;
-  return $types;
+  return array(
+    'islandora:sp_pdf' => array(
+      'islandora_pdf' => array(
+        ISLANDORA_VIEW_HOOK => TRUE,
+        ISLANDORA_POST_INGEST_HOOK => TRUE,
+      ),
+    ),
+  );
 }
 
 /**
- * this modules implentation of view_object hook will handle objects of type islandora:pdfCModel and  islandora:sp_pdf
- * as registered in its return types
- * Other modules would handle objects of other types.
- * @param Object $object
- *    a tuque fedora object
- * @param object $user
- * @param string $page_number
- * @param string $page_size
- * @return string
- *    themed html
+ * Implements hook_HOOK_NAME() for ISLANDORA_VIEW_HOOK.
  */
 function islandora_pdf_islandora_view_object($object, $user, $page_number, $page_size) {
-  $cmodel_list = islandora_pdf_islandora_get_types();
-  $models = $object->models;
-  foreach ($object->models as $model) {
-    if (isset($cmodel_list[$model][ISLANDORA_VIEW_HOOK]) && $cmodel_list[$model][ISLANDORA_VIEW_HOOK] == TRUE) {
-      $output = theme('islandora_pdf', array('islandora_object' => $object));
-      return array('' => $output);
-    }
-  }
-  return NULL;
+  $output = theme('islandora_pdf', array('islandora_object' => $object));
+  return array('' => $output);
 }
 
+/**
+ * Implements hook_HOOK_NAME() for ISLANDORA_POST_INGEST_HOOK.
+ */
 function islandora_pdf_islandora_ingest_post_ingest($object) {
-  $cmodel_list = islandora_pdf_islandora_get_types();
-  if (!isset($cmodel_list)) {
-    return ;
-  }
-  $models = $object->models;
-  if (!isset($models)) {
-    return ;
-  }
-
-  // If at least one of the object's models are present in our list of
-  //   supported models, respond.
-  if (array_intersect($models, array_keys($cmodel_list))) {
-    module_load_include('inc', 'islandora_pdf', 'includes/pdf.process');
-    islandora_pdf_create_all_derivatives($object);
-  }
+  module_load_include('inc', 'islandora_pdf', 'includes/pdf.process');
+  islandora_pdf_create_all_derivatives($object);
 }
 
 /**

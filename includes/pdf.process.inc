@@ -61,11 +61,11 @@ function islandora_pdf_create_derivative($original, $object, $dsid, $width, $hei
     return FALSE;
   }
 
-  islandora_pdf_add_derivative($object, $dsid, $dest);
+  islandora_pdf_add_datastream($object, $dsid, $dest);
   file_unmanaged_delete($dest);
 }
 
-function islandora_pdf_add_derivative($object, $dsid, $dest) {
+function islandora_pdf_add_datastream($object, $dsid, $dest) {
   try {
     $ds = $object->constructDatastream($dsid, 'M');
     $ds->label = $dsid;

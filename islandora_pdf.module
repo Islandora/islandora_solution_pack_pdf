@@ -100,31 +100,17 @@ function islandora_pdf_islandora_required_objects() {
 }
 
 /**
- * Implements hook_islandora_type_info().
+ * Implements hook_CMODEL_PID_islandora_view_object().
  */
-function islandora_pdf_islandora_type_info() {
-  return array(
-    'islandora:sp_pdf' => array(
-      'islandora_pdf' => array(
-        ISLANDORA_VIEW_HOOK => TRUE,
-        ISLANDORA_POST_INGEST_HOOK => TRUE,
-      ),
-    ),
-  );
-}
-
-/**
- * Implements hook_islandora_view_object().
- */
-function islandora_pdf_islandora_view_object($object, $user, $page_number, $page_size) {
+function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $user, $page_number, $page_size) {
   $output = theme('islandora_pdf', array('islandora_object' => $object));
   return array('' => $output);
 }
 
 /**
- * Implements hook_islandora_ingest_post_ingest().
+ * Implements hook_CMODEL_PID_islandora_ingest_post_ingest().
  */
-function islandora_pdf_islandora_ingest_post_ingest($object) {
+function islandora_pdf_islandora_sp_pdf_islandora_ingest_post_ingest($object) {
   module_load_include('inc', 'islandora_pdf', 'includes/pdf.process');
   islandora_pdf_create_all_derivatives($object);
 }

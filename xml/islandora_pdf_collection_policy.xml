@@ -4,6 +4,7 @@
     <content_model name="Islandora PDF content model" dsid="ISLANDORACM" namespace="islandora:pdf" pid="islandora:sp_pdf"/>
     <!-- Maintained for backwards-compatibility -->
     <content_model name="Strict PDF content model" dsid="ISLANDORACM" namespace="islandora:strictpdf" pid="islandora:sp_strict_pdf"/>
+    <content_model name="PDF content model" dsid="ISLANDORACM" namespace="islandora:sp_pdf" pid="islandora:sp_pdf"/>
   </content_models>
   <search_terms>
   </search_terms>

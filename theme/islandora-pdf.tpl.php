@@ -8,19 +8,16 @@
  * @TODO: don't call drupal_set_title here
  */
 ?>
-<?php if(isset($islandora_object_label)): ?>
-  <?php drupal_set_title("$islandora_object_label"); ?>
-<?php endif; ?>
 
 <div class="islandora-pdf-object islandora">
   <div class="islandora-pdf-content-wrapper clearfix">
-    <?php if (isset($islandora_preview_link)): ?>
+    <?php if (isset($islandora_content)): ?>
       <div class="islandora-pdf-content">
-        <?php print $islandora_preview_link; ?>
+        <?php print $islandora_content; ?>
       </div>
     <?php endif; ?>
   <div class="islandora-pdf-sidebar">
-    <?php if (isset($dc_array['dc:description']['value'])): ?>
+    <?php if (!empty($dc_array['dc:description']['value'])): ?>
       <h2><?php print $dc_array['dc:description']['label']; ?></h2>
       <p><?php print $dc_array['dc:description']['value']; ?></p>
     <?php endif; ?>

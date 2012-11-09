@@ -43,5 +43,8 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
     $preview_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/PREVIEW/view';
     $variables['islandora_preview_img'] = '<img src="' . $preview_url . '"/>';
     $variables['islandora_preview_link'] = l($variables['islandora_preview_img'], $variables['islandora_full_url'], array('html' => TRUE));
+    $download_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/OBJ/download';
+    $download_text = t("Download pdf");
+    $variables['islandora_download_link'] = "<pre>" . l($download_text, $download_url, array('attributes' => array('class' => array('islandora-pdf-link')))) . "</pre>";
   }
 }

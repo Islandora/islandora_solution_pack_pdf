@@ -5,6 +5,10 @@
     that breaks down to two columns when 2 sidebars are visible
 */
 
+.islandora-pdf-link {
+
+}
+
 .islandora-pdf-content {
   background-color: #F2F2F2;
   border: 1px solid #ddd;

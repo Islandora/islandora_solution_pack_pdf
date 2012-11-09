@@ -104,7 +104,6 @@ function islandora_pdf_islandora_required_objects() {
  */
 function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_number, $page_size) {
   $output = theme('islandora_pdf', array('islandora_object' => $object));
-  dd($output, "PDF VIEW OBJECT RESULTS");
   return array('' => $output);
 }
 

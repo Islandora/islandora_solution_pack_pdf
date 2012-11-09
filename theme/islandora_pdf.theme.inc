@@ -31,18 +31,33 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   $variables['theme_hook_suggestions'][] = 'islandora_pdf__' . str_replace(':', '_', $islandora_object->id);
   $variables['parent_collections'] = islandora_datastream_get_parents($islandora_object);
   global $base_url;
+  // set title
+  if(isset($islandora_object->label)) {
+    drupal_set_title($islandora_object->label);
+  }
+  // full size url
   if (isset($islandora_object['OBJ'])) {
-    $full_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/OBJ/view';
+    $full_size_url = url("islandora/object/{$islandora_object->id}/datastream/OBJ/view", array('absolute' => TRUE));
     $variables['islandora_full_url'] = $full_size_url;
   }
+  // thumbnail
   if (isset($islandora_object['TN'])) {
-    $thumbnail_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
-    $variables['islandora_thumbnail_img'] = '<img src="' . $thumbnail_size_url . '"/>';
+    $thumbnail_size_url = url("islandora/object/{$islandora_object->id}/datastream/TN/view");
+    $params = array(
+      'title' => $islandora_object->label,
+      'path' => $thumbnail_size_url
+    );
+    $variables['islandora_thumbnail_img'] = theme('image', $params);
   }
+  // preview image + link
   if (isset($islandora_object['PREVIEW'])) {
-    $preview_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/PREVIEW/view';
-    $variables['islandora_preview_img'] = '<img src="' . $preview_url . '"/>';
-    $variables['islandora_preview_link'] = l($variables['islandora_preview_img'], $variables['islandora_full_url'], array('html' => TRUE));
+    $preview_url = url("islandora/object/{$islandora_object->id}/datastream/PREVIEW/view");
+    $params = array(
+      'title' => $islandora_object->label,
+      'path' => $preview_url
+    );
+    $variables['islandora_preview_img'] = theme('image', $params);
+    $variables['islandora_content'] = l($variables['islandora_preview_img'], $variables['islandora_full_url'], array('html' => TRUE));
     $download_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/OBJ/download';
     $download_text = t("Download pdf");
     $variables['islandora_download_link'] = "<pre>" . l($download_text, $download_url, array('attributes' => array('class' => array('islandora-pdf-link')))) . "</pre>";

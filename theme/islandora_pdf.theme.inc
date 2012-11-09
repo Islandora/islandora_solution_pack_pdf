@@ -58,8 +58,8 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
     );
     $variables['islandora_preview_img'] = theme('image', $params);
     $variables['islandora_content'] = l($variables['islandora_preview_img'], $variables['islandora_full_url'], array('html' => TRUE));
-    $download_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/OBJ/download';
+    $download_url = 'islandora/object/' . $islandora_object->id . '/datastream/OBJ/download';
     $download_text = t("Download pdf");
-    $variables['islandora_download_link'] = "<pre>" . l($download_text, $download_url, array('attributes' => array('class' => array('islandora-pdf-link')))) . "</pre>";
+    $variables['islandora_download_link'] = l($download_text, $download_url, array('attributes' => array('class' => array('islandora-pdf-link'))));
   }
 }

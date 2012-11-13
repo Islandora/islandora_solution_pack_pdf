@@ -15,6 +15,7 @@
       <div class="islandora-pdf-content">
         <?php print $islandora_content; ?>
       </div>
+      <?php print $islandora_download_link; ?> 
     <?php endif; ?>
   <div class="islandora-pdf-sidebar">
     <?php if (!empty($dc_array['dc:description']['value'])): ?>

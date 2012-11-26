@@ -1,46 +1,36 @@
 <?php
 
-/*
+/**
  * @file
- * An Islandora module to handle basic pdf cmodels
+ *
+ * Handles the creation/display of islandora:sp-pdf objects.
  */
 
 /**
  * Implements hook_menu().
  */
 function islandora_pdf_menu() {
-  $items = array();
-  $items['admin/islandora/pdf'] = array(
-    'title' => 'PDF Module',
-    'description' => 'Configure the PDF solution pack.',
-    'page callback' => 'drupal_get_form',
-    'access arguments' => array('administer site configuration'),
-    'page arguments' => array('islandora_pdf_admin'),
-    'file' => 'admin/islandora_pdf.admin.inc',
-    'type' => MENU_NORMAL_ITEM,
+  return array(
+    'admin/islandora/pdf' => array(
+      'title' => 'PDF Module',
+      'description' => 'Configure the PDF solution pack.',
+      'page callback' => 'drupal_get_form',
+      'access arguments' => array('administer site configuration'),
+      'page arguments' => array('islandora_pdf_admin'),
+      'file' => 'admin/islandora_pdf.admin.inc',
+      'type' => MENU_NORMAL_ITEM,
+    )
   );
-  return $items;
 }
 
 /**
  * Implements hook_theme().
- *
- * We supply a pattern so we can overide templates at the theme level if
- * needed.  We can append a PID to a template and the new template file will be
- * called--the PID's colon should be replaced with a hyphen.
- *
- * @return array
  */
 function islandora_pdf_theme($existing, $type, $theme, $path) {
   return array(
     'islandora_pdf' => array(
       'file' => 'theme/islandora_pdf.theme.inc',
       'template' => 'theme/islandora-pdf',
-      // We can add PIDs to the end of this pattern in our preprocess function
-      //   and templates will be able to have have a pid appended to the
-      //   template name to overide a template on a per object basis.
-      // An example template might be named
-      //   "islandora-pdf--islandora-27.tpl.php".
       'pattern' => 'islandora_pdf__',
       'variables' => array('islandora_object' => NULL),
     )
@@ -51,9 +41,7 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
  * Implements hook_islandora_required_objects().
  */
 function islandora_pdf_islandora_required_objects() {
-  // module path
   $module_path = drupal_get_path('module', 'islandora_pdf');
-
   return array(
     'islandora_pdf' => array(
       'title' => 'Islandora PDF',
@@ -136,9 +124,24 @@ function islandora_pdf_islandora_content_model_forms_form_associations() {
       'content_model' => 'islandora:sp_pdf',
       'form_name' => 'PDF MODS form',
       'dsid' => 'MODS',
-      'title_field' => "['titleInfo']['title']",
+      'title_field' => array('titleInfo', 'title'),
       'transform' => 'mods_to_dc.xsl',
       'template' => FALSE,
     ),
+  );
+}
+
+/**
+ * Implements hook_islandora_ingest_steps().
+ */
+function islandora_audio_islandora_sp_pdf_islandora_ingest_steps(array $configuration) {
+  return array(
+    array(
+      'weight' => 10,
+      'type' => 'form',
+      'form_id' => 'islandora_pdf_pdf_upload_form',
+      'module' => 'islandora_pdf',
+      'file' => 'includes/pdf_upload.form.inc'
+    )
   );
 }

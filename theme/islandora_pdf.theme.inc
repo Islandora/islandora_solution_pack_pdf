@@ -17,6 +17,7 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   $islandora_object = $variables['islandora_object'];
   $repository = $islandora_object->repository;
   module_load_include('inc', 'islandora', 'includes/datastream');
+  module_load_include('inc', 'islandora', 'includes/utilities');
 
   try {
     $dc = $islandora_object['DC']->content;

@@ -15,7 +15,7 @@
       <div class="islandora-pdf-content">
         <?php print $islandora_content; ?>
       </div>
-      <?php print $islandora_download_link; ?> 
+      <?php print $islandora_download_link; ?>
     <?php endif; ?>
   <div class="islandora-pdf-sidebar">
     <?php if (!empty($dc_array['dc:description']['value'])): ?>
@@ -26,8 +26,8 @@
       <div>
         <h2><?php print t('In collections'); ?></h2>
         <ul>
-          <?php foreach ($parent_collections as $key => $value): ?>
-            <li><?php print $value['label_link'] ?></li>
+          <?php foreach ($parent_collections as $collection): ?>
+            <li><?php print l($collection->label, "islandora/object/{$collection->id}"); ?></li>
           <?php endforeach; ?>
         </ul>
       </div>

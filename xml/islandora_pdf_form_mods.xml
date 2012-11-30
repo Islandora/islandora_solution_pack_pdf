@@ -13,23 +13,10 @@
         <properties>
             <type>form</type>
             <access>TRUE</access>
-            <attributes>
-                <enctype>multipart/form-data</enctype>
-            </attributes>
             <required>FALSE</required>
             <tree>TRUE</tree>
         </properties>
         <children>
-            <element name="ingest-file-location">
-                <properties>
-                    <type>file</type>
-                    <access>TRUE</access>
-                    <description>Select your PDF to upload.</description>
-                    <required>FALSE</required>
-                    <tree>TRUE</tree>
-                </properties>
-                <children/>
-            </element>
             <element name="titleInfo">
                 <properties>
                     <type>markup</type>
@@ -567,16 +554,6 @@
                         </update>
                         <delete>NULL</delete>
                     </actions>
-                </properties>
-                <children/>
-            </element>
-            <element name="submit">
-                <properties>
-                    <type>submit</type>
-                    <access>TRUE</access>
-                    <required>FALSE</required>
-                    <tree>TRUE</tree>
-                    <value>Submit</value>
                 </properties>
                 <children/>
             </element>

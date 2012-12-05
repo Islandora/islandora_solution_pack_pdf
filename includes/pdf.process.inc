@@ -41,7 +41,9 @@ function islandora_pdf_get_derivative_source_as_unmanaged_file(FedoraObject $obj
   $mime_detect = new MimeDetect();
   $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
   $file_name = str_replace(':', '-', $object->id);
-  return file_unmanaged_save_data($object['OBJ']->content, "temporary://{$file_name}.OBJ.{$ext}");
+  $file_uri = file_create_filename("{$file_name}.OBJ.{$ext}", 'temporary://');
+  $object['OBJ']->getContent($file_uri);
+  return $file_uri;
 }
 
 /**

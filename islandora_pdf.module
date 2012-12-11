@@ -40,50 +40,45 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_islandora_required_objects().
  */
-function islandora_pdf_islandora_required_objects() {
+function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_pdf');
+  // PDF Content Model
+  $pdf_content_model = $connection->repository->constructObject('islandora:sp_pdf');
+  $pdf_content_model->owner = 'fedoraAdmin';
+  $pdf_content_model->label = 'Islandora PDF Content Model';
+  $pdf_content_model->models = 'fedora-system:ContentModel-3.0';
+  // DS-COMPOSITE-MODEL Datastream
+  $datastream = $pdf_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
+  $datastream->label = 'DS-COMPOSITE-MODEL';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_pdf_ds_composite_model.xml", FALSE);
+  $pdf_content_model->ingestDatastream($datastream);
+  // PDF Collection
+  $pdf_collection = $connection->repository->constructObject('islandora:sp_pdf_collection');
+  $pdf_collection->owner = 'fedoraAdmin';
+  $pdf_collection->label = 'PDF Collection';
+  $pdf_collection->models = 'islandora:collectionCModel';
+  $pdf_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'info:fedora/islandora:root');
+  // Collection Policy Datastream
+  $datastream = $pdf_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_pdf_collection_policy.xml", FALSE);
+  $pdf_collection->ingestDatastream($datastream);
+  // TN Datastream
+  $datastream = $pdf_collection->constructDatastream('TN', 'M');
+  $datastream->label = 'Thumbnail';
+  $datastream->mimetype = 'image/png';
+  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  $pdf_collection->ingestDatastream($datastream);
   return array(
     'islandora_pdf' => array(
       'title' => 'Islandora PDF',
       'objects' => array(
-        array(
-          'pid' => 'islandora:sp_pdf',
-          'label' => 'Islandora PDF content model',
-          'cmodel' => 'fedora-system:ContentModel-3.0',
-          'datastreams' => array(
-            array(
-              'dsid' => 'DS-COMPOSITE-MODEL',
-              'label' => 'DS-COMPOSITE-MODEL',
-              'mimetype' => 'text/xml',
-              'control_group' => 'X',
-              'datastream_file' => "$module_path/xml/islandora_pdf_ds_composite_model.xml",
-            ),
-          ),
-        ),
-        array(
-          'pid' => 'islandora:sp_pdf_collection',
-          'label' => 'PDF collection',
-          'cmodel' => 'islandora:collectionCModel',
-          'parent' => 'islandora:root',
-          'datastreams' => array(
-            array(
-              'dsid' => 'COLLECTION_POLICY',
-              'label' => 'Collection policy',
-              'mimetype' => 'text/xml',
-              'control_group' => 'X',
-              'datastream_file' => "$module_path/xml/islandora_pdf_collection_policy.xml",
-            ),
-            array(
-              'dsid' => 'TN',
-              'label' => 'Thumbnail',
-              'mimetype' => 'image/png',
-              'control_group' => 'M',
-              'datastream_file' => "$module_path/images/folder.png",
-            ),
-          ),
-        ),
-      ),
-    ),
+        $pdf_content_model,
+        $pdf_collection
+      )
+    )
   );
 }
 

@@ -91,9 +91,9 @@ function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_num
 }
 
 /**
- * Implements hook_CMODEL_PID_islandora_ingest_post_ingest().
+ * Implements hook_CMODEL_PID_islandora_object_ingested().
  */
-function islandora_pdf_islandora_sp_pdf_islandora_ingest_post_ingest($object) {
+function islandora_pdf_islandora_sp_pdf_islandora_object_ingested($object) {
   module_load_include('inc', 'islandora_pdf', 'includes/pdf.process');
   islandora_pdf_create_all_derivatives($object);
 }

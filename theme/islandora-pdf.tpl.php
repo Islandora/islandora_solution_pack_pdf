@@ -5,7 +5,6 @@
  * This is the template file for the pdf object
  *
  * @TODO: Add documentation about this file and the available variables
- * @TODO: don't call drupal_set_title here
  */
 ?>
 

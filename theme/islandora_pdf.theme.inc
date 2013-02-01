@@ -31,10 +31,6 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   $variables['theme_hook_suggestions'][] = 'islandora_pdf__' . str_replace(':', '_', $islandora_object->id);
   $variables['parent_collections'] = islandora_get_parents_from_rels_ext($islandora_object);
   global $base_url;
-  // set title
-  if (isset($islandora_object->label)) {
-    drupal_set_title($islandora_object->label);
-  }
   // full size url
   if (isset($islandora_object['OBJ'])) {
     $full_size_url = url("islandora/object/{$islandora_object->id}/datastream/OBJ/view", array('absolute' => TRUE));

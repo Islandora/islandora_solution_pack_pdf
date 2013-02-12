@@ -133,6 +133,7 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid,  $width, $height)
   $dest = drupal_realpath($temp);
   $args['quality'] = '-quality ' . escapeshellarg(variable_get('imagemagick_quality', 75));
   $args['previewsize'] = '-resize ' . escapeshellarg("{$width}x{$height}");
+  $args['colors'] = '-colorspace RGB';
   $context = array(
     'source' => $source,
     'destination' => $dest,

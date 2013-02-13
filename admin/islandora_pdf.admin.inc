@@ -8,8 +8,70 @@
 /**
  * Admin form function
  */
-function islandora_pdf_admin() {
+function islandora_pdf_admin($form, &$form_state) {
+
+  if (isset($form_state['values']['islandora_pdf_path_to_pdftotext'])) {
+    $islandora_pdf_path_to_pdftotext = $form_state['values']['islandora_pdf_path_to_pdftotext'];
+  }
+  else {
+    $islandora_pdf_path_to_pdftotext = variable_get('islandora_pdf_path_to_pdftotext', '/usr/bin/pdftotext');
+  }
+  exec($islandora_pdf_path_to_pdftotext, $output, $return_value);
+  $confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>'
+      . t('pdftotext executable found at !url', array('!url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"));
+  if ($return_value != 99) {
+    $confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> '
+        . t('Unable to find pdftotext executable at !url', array('!url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"));
+  }
+
   $form = array();
+
+
+  // ajax wrapper for url checking
+  $form['islandora_pdf_url_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('CONVERSION EXECUTABLE'),
+  );
+
+  $form['islandora_pdf_url_fieldset']['islandora_pdf_create_fulltext'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("Extract text from PDF?"),
+    '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE)
+  );
+
+  $form['islandora_pdf_url_fieldset']['wrapper'] = array(
+    '#prefix' => '<div id="islandora-url">',
+    '#suffix' => '</div>',
+    '#type' => 'markup',
+  );
+  $form['islandora_pdf_url_fieldset']['wrapper'] = array(
+    '#prefix' => '<div id="islandora-url">',
+    '#suffix' => '</div>',
+    '#type' => 'markup',
+  );
+
+  $form['islandora_pdf_url_fieldset']['wrapper']['islandora_pdf_path_to_pdftotext'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Path to pdftotext executable'),
+    '#default_value' => $islandora_pdf_path_to_pdftotext,
+    '#description' => t('Path to pdftotext <br /> !confirmation_message',
+        array(
+          '!confirmation_message' => $confirmation_message)
+    ),
+    '#ajax' => array(
+      'callback' => 'islandora_update_pdftotext_url_div',
+      'wrapper' => 'islandora-url',
+      'effect' => 'fade',
+      'event' => 'blur',
+      'progress' => array('type' => 'throbber'),
+    ),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="islandora_pdf_create_fulltext"]' => array('checked' => TRUE),
+      ),
+    )
+  );
+
 
   $form['islandora_pdf_thumbnail_fieldset'] = array(
     '#type' => 'fieldset',
@@ -66,5 +128,18 @@ function islandora_pdf_admin() {
  * Admin form validate function
  */
 function islandora_pdf_admin_validate($form, &$form_state) {
+  if ($form_state['values']['islandora_pdf_create_fulltext']) {
+    $islandora_pdf_path_to_pdftotext = $form_state['values']['islandora_pdf_path_to_pdftotext'];
+    exec($islandora_pdf_path_to_pdftotext, $output, $return_value);
+    if ($return_value != 99) {
+      form_set_error('', t('Cannot extract text from PDF without a valid path to pdftotext.'));
+    }
+  }
+}
 
+function islandora_update_pdftotext_url_div($form, $form_state) {
+  unset($form_state['submit_handlers']);
+  $form_state['rebuild'] = TRUE;
+
+  return $form['islandora_pdf_url_fieldset']['wrapper'];
 }

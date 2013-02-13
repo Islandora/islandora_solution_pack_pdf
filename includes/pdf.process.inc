@@ -24,6 +24,9 @@ function islandora_pdf_create_all_derivatives(FedoraObject $object) {
   $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
   $success &= islandora_pdf_add_tn_derivative($object, $file_uri);
   $success &= islandora_pdf_add_preview_derivative($object, $file_uri);
+  if (variable_get('islandora_pdf_create_fulltext', FALSE)) {
+    $success &= islandora_pdf_add_fulltext_derivative($object, $file_uri);
+  }
   file_unmanaged_delete($file_uri);
   return $success;
 }
@@ -61,6 +64,36 @@ function islandora_pdf_add_tn_derivative(FedoraObject $object, $file_uri) {
   $width = variable_get('islandora_pdf_thumbnail_width', 200);
   $height = variable_get('islandora_pdf_thumbnail_height', 200);
   return islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height);
+}
+
+/**
+ * Creates a textural deriviative for the FULL_TEXT datastream.
+ *
+ * @param FedoraObject $object
+ *   The object to add the deriviative datastreams to.
+ * @param string $file_uri
+ *   The URI to the pdf file the derivative will be generated from.
+ *
+ * @return boolean
+ *   TRUE if successful, FALSE otherwise.
+ */
+function islandora_pdf_add_fulltext_derivative(FedoraObject $object, $file_uri) {
+  $dsid = "FULL_TEXT";
+  $source = $source = drupal_realpath($file_uri);
+  $success = FALSE;
+  $executable = variable_get('islandora_pdf_path_to_pdftotext', '/usr/bin/pdftotext');
+  $temp = drupal_tempnam("temporary://", "fulltext") . '.txt';
+  $derivative_file_uri = drupal_realpath($temp);
+  $command = "$executable $source $derivative_file_uri";
+  $success = exec($command, $output);
+
+  $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
+  file_unmanaged_delete($temp);
+
+  if ($success == FALSE) {
+    drupal_set_message(t('Failed to create @dsid derivative.', array('@dsid' => $dsid)), 'error');
+  }
+  return $success;
 }
 
 /**
@@ -125,7 +158,7 @@ function islandora_pdf_add_jpg_derivative(FedoraObject $object, $file_uri, $dsid
  * @return string
  *   A URI to the generated derivative if successful, FALSE otherwise.
  */
-function islandora_pdf_create_jpg_derivative($file_uri, $dsid,  $width, $height) {
+function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) {
   $source = drupal_realpath($file_uri) . '[0]';
   $matches = array();
   preg_match("/\/([^.]*).*$/", $source, $matches); // Get the base name of the source file.
@@ -172,8 +205,7 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
     $ds->setContentFromFile(drupal_realpath($file_uri), FALSE);
     $object->ingestDatastream($ds);
     return TRUE;
-  }
-  catch (exception $e) {
+  } catch (exception $e) {
     drupal_set_message(t("@message", array("@message" => $e->getMessage())));
     return FALSE;
   }

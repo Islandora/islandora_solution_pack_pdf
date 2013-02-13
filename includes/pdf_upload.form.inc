@@ -34,6 +34,11 @@ function islandora_pdf_pdf_upload_form(array $form, array &$form_state) {
   );
 
   if (variable_get('islandora_pdf_allow_text_upload', FALSE)) {
+    $form['islandora_pdf_text_upload'] = array(
+      '#type' => 'checkbox',
+      '#title' => t("Add text file to this upload?"),
+      '#default_value' => FALSE,
+    );
     $form['text'] = array(
       '#title' => t('PDF text'),
       '#type' => 'managed_file',
@@ -44,6 +49,11 @@ function islandora_pdf_pdf_upload_form(array $form, array &$form_state) {
       '#upload_validators' => array(
         'file_validate_extensions' => array('txt'),
         'file_validate_size' => array($upload_size * 1024 * 1024), // Assume its specified in MB
+      ),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="islandora_pdf_text_upload"]' => array('checked' => TRUE),
+        ),
       )
     );
   }

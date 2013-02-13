@@ -24,7 +24,8 @@ function islandora_pdf_create_all_derivatives(FedoraObject $object) {
   $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
   $success &= islandora_pdf_add_tn_derivative($object, $file_uri);
   $success &= islandora_pdf_add_preview_derivative($object, $file_uri);
-  if (variable_get('islandora_pdf_create_fulltext', FALSE)) {
+
+  if (!isset($object['FULL_TEXT']) && variable_get('islandora_pdf_create_fulltext', FALSE)) {
     $success &= islandora_pdf_add_fulltext_derivative($object, $file_uri);
   }
   file_unmanaged_delete($file_uri);

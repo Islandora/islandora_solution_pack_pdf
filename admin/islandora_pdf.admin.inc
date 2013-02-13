@@ -30,7 +30,13 @@ function islandora_pdf_admin($form, &$form_state) {
   // ajax wrapper for url checking
   $form['islandora_pdf_url_fieldset'] = array(
     '#type' => 'fieldset',
-    '#title' => t('CONVERSION EXECUTABLE'),
+    '#title' => t('TEXT'),
+  );
+
+  $form['islandora_pdf_url_fieldset']['islandora_pdf_allow_text_upload'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("Allow users to upload text file with PDF?"),
+    '#default_value' => variable_get('islandora_pdf_allow_text_upload', FALSE)
   );
 
   $form['islandora_pdf_url_fieldset']['islandora_pdf_create_fulltext'] = array(

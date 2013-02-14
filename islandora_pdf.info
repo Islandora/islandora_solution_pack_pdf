@@ -1,4 +1,4 @@
-name = "Islandora Pdf"
+name = "Islandora PDF"
 description = "Islandora Repository PDF Module"
 dependencies[] = islandora
 dependencies[] = imagemagick

@@ -1,122 +1,143 @@
 <?php
 
-/*
- * @file islandora_basic_image.module
- * 
- * an Islandora module to handle basic image cmodels 
- * 
- * 
- * This file is part of Islandora.
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the program.  If not, see <http ://www.gnu.org/licenses/>.
+/**
+ * @file
+ *
+ * Handles the creation/display of islandora:sp-pdf objects.
  */
 
 /**
- * Implementation of hook_menu. 
- * If you need to add secondary tabs to either view or manage you would create a
- * hook_menu function similar to below.  You would also need to create an access function
- * to tell islandora when to show your tabs.  There is an example below.
+ * Implements hook_menu().
  */
 function islandora_pdf_menu() {
-  $items = array();
-  $items['admin/islandora/pdf'] = array(
-    'title' => 'PDF Module',
-    'description' => 'Configure the PDF solution pack.',
-    'page callback' => 'drupal_get_form',
-    'access arguments' => array('administer site configuration'),
-    'page arguments' => array('islandora_pdf_admin'),
-    'file' => 'admin/islandora_pdf.admin.inc',
-    'type' => MENU_NORMAL_ITEM,
+  return array(
+    'admin/islandora/pdf' => array(
+      'title' => 'PDF Module',
+      'description' => 'Configure the PDF solution pack.',
+      'page callback' => 'drupal_get_form',
+      'access arguments' => array('administer site configuration'),
+      'page arguments' => array('islandora_pdf_admin'),
+      'file' => 'includes/admin.form.inc',
+      'type' => MENU_NORMAL_ITEM,
+    )
   );
-  return $items;
 }
 
 /**
- * Theme registry function
- * We supply a pattern so we can overide templates at the theme level if needed.
- * we can append a pid to a template and the new template file will be called (the pids
- * colon should be replaced with a dash)
- * @return array
+ * Implements hook_theme().
  */
 function islandora_pdf_theme($existing, $type, $theme, $path) {
   return array(
-    'islandora_pdf_objects' => array(
-      'file' => 'theme/islandora_pdf.theme.inc',
-      'template' => 'islandora-basic-image-view-objects',
-      'variables' => array('islandora_objects' => NULL),
-    ),
     'islandora_pdf' => array(
-      'file' => 'theme/islandora_pdf.theme.inc',
+      'file' => 'theme/theme.inc',
       'template' => 'theme/islandora-pdf',
-      'pattern' => 'islandora_pdf__', //we can add pids to the end of this pattern in our preprocess function
-      // and templates will be able to have have a pid appended to the template name to overide a template on a per object basis
-      //an example template would be named islandora-basic-image--islandora-27.tpl.phps
+      'pattern' => 'islandora_pdf__',
       'variables' => array('islandora_object' => NULL),
     )
   );
 }
 
 /**
- * tells the main module what types of objects we support.  This is used to determine whether or not
- * this module should attempt to respond.
- * @return array 
- *   array of content model pids that this module supports
+ * Implements hook_islandora_required_objects().
  */
-function islandora_pdf_islandora_get_types() {
-  $types = array();
-  $types['islandora:sp_pdf'][ISLANDORA_VIEW_HOOK] = TRUE;
-  return $types;
+function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
+  $module_path = drupal_get_path('module', 'islandora_pdf');
+  // PDF Content Model
+  $pdf_content_model = $connection->repository->constructObject('islandora:sp_pdf');
+  $pdf_content_model->owner = 'fedoraAdmin';
+  $pdf_content_model->label = 'Islandora PDF Content Model';
+  $pdf_content_model->models = 'fedora-system:ContentModel-3.0';
+  // DS-COMPOSITE-MODEL Datastream
+  $datastream = $pdf_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
+  $datastream->label = 'DS-COMPOSITE-MODEL';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_pdf_ds_composite_model.xml", FALSE);
+  $pdf_content_model->ingestDatastream($datastream);
+  // PDF Collection
+  $pdf_collection = $connection->repository->constructObject('islandora:sp_pdf_collection');
+  $pdf_collection->owner = 'fedoraAdmin';
+  $pdf_collection->label = 'PDF Collection';
+  $pdf_collection->models = 'islandora:collectionCModel';
+  $pdf_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
+  // Collection Policy Datastream
+  $datastream = $pdf_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_pdf_collection_policy.xml", FALSE);
+  $pdf_collection->ingestDatastream($datastream);
+  // TN Datastream
+  $datastream = $pdf_collection->constructDatastream('TN', 'M');
+  $datastream->label = 'Thumbnail';
+  $datastream->mimetype = 'image/png';
+  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  $pdf_collection->ingestDatastream($datastream);
+  return array(
+    'islandora_pdf' => array(
+      'title' => 'Islandora PDF',
+      'objects' => array(
+        $pdf_content_model,
+        $pdf_collection
+      )
+    )
+  );
 }
 
 /**
- * this modules implentation of view_object hook will handle objects of type islandora:basicImageCModel and  islandora:sp_basic_image
- * as registered in its return types
- * Other modules would handle objects of other types.
- * @param Object $object
- *    a tuque fedora object
- * @param object $user
- * @param string $page_number
- * @param string $page_size
- * @return string
- *    themed html
+ * Implements hook_CMODEL_PID_islandora_view_object().
  */
-function islandora_pdf_islandora_view_object($object, $user, $page_number, $page_size) {
-  //global $user;
-  $cmodel_list = islandora_pdf_islandora_get_types();
-  $models = $object->models;
-  foreach ($object->models as $model) {
-    if (isset($cmodel_list[$model][ISLANDORA_VIEW_HOOK]) && $cmodel_list[$model][ISLANDORA_VIEW_HOOK] == TRUE) {
-      $output = theme('islandora_pdf', array('islandora_object' => $object));
-      return array('' => $output);
-    }
-  }
-  return NULL;
+function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_number, $page_size) {
+  $output = theme('islandora_pdf', array('islandora_object' => $object));
+  return array('' => $output);
 }
 
-function islandora_pdf_islandora_ingest_post_ingest($object) {
-  $cmodel_list = islandora_pdf_islandora_get_types();
-  if(!isset($cmodel_list)){
-    return ;
-  }
-  $models = $object->models;
-  if(!isset($models)){
-    return ;
-  }
-  foreach ($models as $model) {
-    if (isset($cmodel_list[$model])) {
-      module_load_include('inc', 'islandora_pdf', 'includes/pdf.process');
-      islandora_pdf_create_all_derivatives($object);
-    }
-  }
+/**
+ * Implements hook_CMODEL_PID_islandora_object_ingested().
+ */
+
+function islandora_pdf_islandora_sp_pdf_islandora_object_ingested($object) {
+  module_load_include('inc', 'islandora_pdf', 'includes/derivatives');
+  islandora_pdf_create_all_derivatives($object);
+}
+
+/**
+ * Implements hook_islandora_xml_form_builder_forms().
+ */
+function islandora_pdf_islandora_xml_form_builder_forms() {
+  $module_path = drupal_get_path('module', 'islandora_pdf');
+  return array(
+    'PDF MODS form' => array(
+      'form_file' => "$module_path/xml/islandora_pdf_form_mods.xml",
+    ),
+  );
+}
+
+/**
+ * Implements hook_islandora_content_model_forms_form_associations().
+ */
+function islandora_pdf_islandora_content_model_forms_form_associations() {
+  return array(
+    'islandora_pdf_mods_form' => array(
+      'content_model' => 'islandora:sp_pdf',
+      'form_name' => 'PDF MODS form',
+      'dsid' => 'MODS',
+      'title_field' => array('titleInfo', 'title'),
+      'transform' => 'mods_to_dc.xsl',
+      'template' => FALSE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_islandora_ingest_steps().
+ */
+function islandora_pdf_islandora_sp_pdf_islandora_ingest_steps(array $configuration) {
+  return array(
+    'islandora_pdf_file_upload' => array(
+      'weight' => 10,
+      'type' => 'form',
+      'form_id' => 'islandora_pdf_pdf_upload_form',
+      'module' => 'islandora_pdf',
+      'file' => 'includes/pdf_upload.form.inc'
+    )
+  );
 }

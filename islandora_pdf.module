@@ -17,7 +17,7 @@ function islandora_pdf_menu() {
       'page callback' => 'drupal_get_form',
       'access arguments' => array('administer site configuration'),
       'page arguments' => array('islandora_pdf_admin'),
-      'file' => 'admin/islandora_pdf.admin.inc',
+      'file' => 'includes/admin.form.inc',
       'type' => MENU_NORMAL_ITEM,
     )
   );
@@ -29,7 +29,7 @@ function islandora_pdf_menu() {
 function islandora_pdf_theme($existing, $type, $theme, $path) {
   return array(
     'islandora_pdf' => array(
-      'file' => 'theme/islandora_pdf.theme.inc',
+      'file' => 'theme/theme.inc',
       'template' => 'theme/islandora-pdf',
       'pattern' => 'islandora_pdf__',
       'variables' => array('islandora_object' => NULL),
@@ -95,7 +95,7 @@ function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_num
  */
 
 function islandora_pdf_islandora_sp_pdf_islandora_object_ingested($object) {
-  module_load_include('inc', 'islandora_pdf', 'includes/pdf.process');
+  module_load_include('inc', 'islandora_pdf', 'includes/derivatives');
   islandora_pdf_create_all_derivatives($object);
 }
 

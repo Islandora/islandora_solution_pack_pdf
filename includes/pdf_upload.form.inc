@@ -83,7 +83,7 @@ function islandora_pdf_pdf_upload_form_submit(array $form, array &$form_state) {
   $ds->label = $pdf_file->filename;
   $ds->mimetype = $pdf_file->filemime;
 
-  if ($form_state['values']['text']) {
+  if (isset($form_state['values']['text'])) {
     if (empty($object['FULL_TEXT'])) {
       $ds = $object->constructDatastream('FULL_TEXT', 'M');
       $object->ingestDatastream($ds);

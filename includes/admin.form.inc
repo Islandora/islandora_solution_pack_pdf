@@ -41,7 +41,7 @@ function islandora_pdf_admin($form, &$form_state) {
 
   $form['islandora_pdf_url_fieldset']['islandora_pdf_create_fulltext'] = array(
     '#type' => 'checkbox',
-    '#title' => t("Extract text from PDF?"),
+    '#title' => t("Store extracted (or supplied) text?"),
     '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE)
   );
 

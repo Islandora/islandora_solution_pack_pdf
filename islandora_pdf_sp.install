@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Implements hook_enable().  Re-ingests any required objects into Fedora that
+ * are required by the solution pack.
+ */
 function islandora_pdf_sp_enable() {
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
@@ -7,23 +11,35 @@ function islandora_pdf_sp_enable() {
     drupal_set_message(t('Fedora instance is not currently available.  Installation must be verified and completed on the Islandora Configuration page.'));
   }
   else {
-    $solution_pack_info = islandora_pdf_sp_required_fedora_objects();
+    // Get info on the required fedora objects for this solution pack
+    $solution_pack_info = islandora_pdf_sp_fedora_repository_required_fedora_objects();
 
+    // Declare an array that models an empty batch
     $batch = array(
       'title' => t('Installing PDF Solutionpack objects'),
       'file' => drupal_get_path('module', 'fedora_repository') . '/fedora_repository.module',
       'operations' => array(),
     );
 
-
+    // Iterate through the required objects, and push an operation onto the
+    // batch model to re-ingest the object if it does not exist
     foreach ($solution_pack_info['islandora_pdf_sp']['objects'] as $object) {
-      // Add this object to the batch job queue.
       $item = new Fedora_Item($object['pid']);
       if (!$item->exists()) {
         $batch['operations'][] = array('fedora_repository_batch_reingest_object', array($object));
       }
     }
-    batch_set($batch);
-    batch_process();
+
+    // If there's any operations to perform
+    if (count($batch['operations'])) {
+  
+      // Add the batch to be processed
+      batch_set($batch);
+
+      // Start processing, if required
+      if (!batch_get()) {
+        batch_process();
+      }
+    }
   }
 }

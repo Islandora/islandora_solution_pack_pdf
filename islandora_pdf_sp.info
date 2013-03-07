@@ -2,5 +2,5 @@ name = Islandora PDF Solution Pack
 description = Islandora configurations for persisting and retrieving pdf files
 dependencies[] = fedora_repository
 package = Islandora Solution Pack
-version = 6.x-13.1-RC1
+version = 6.x-13.1
 core = 6.x

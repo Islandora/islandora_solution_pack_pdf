@@ -68,7 +68,7 @@ function islandora_pdf_add_tn_derivative(FedoraObject $object, $file_uri) {
 }
 
 /**
- * Creates a textural deriviative for the FULL_TEXT datastream.
+ * Creates a textual derivative for the FULL_TEXT datastream.
  *
  * @param FedoraObject $object
  *   The object to add the deriviative datastreams to.
@@ -86,9 +86,24 @@ function islandora_pdf_add_fulltext_derivative(FedoraObject $object, $file_uri) 
   $temp = drupal_tempnam("temporary://", "fulltext") . '.txt';
   $derivative_file_uri = drupal_realpath($temp);
   $command = "$executable $source $derivative_file_uri";
-  $success = exec($command, $output);
+  exec($command, $execout, $returncode);
+  $success = ($returncode === 0);
 
-  $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
+  if (! $success) {
+    watchdog(
+        'islandora_solution_pack_pdf',
+        t('`%command` returned error when creating %dsid derivative of PID %pid: %error'),
+        array(
+            '%command' => $command,
+            '%dsid' => $dsid,
+            '%pid' => $object->id,
+            '%error' => $execout,
+        ),
+        WATCHDOG_ERROR
+    );
+  } else {
+    $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
+  }
   file_unmanaged_delete($temp);
 
   if ($success == FALSE) {

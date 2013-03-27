@@ -18,6 +18,9 @@
   <dsTypeModel ID="FULL_TEXT">
     <form MIME="text/plain"></form>
   </dsTypeModel>
+  <dsTypeModel ID="TECHMD">
+    <form MIME="text/xml"></form>
+  </dsTypeModel>
   <dsTypeModel ID="TN">
     <form MIME="image/jpeg"></form>
   </dsTypeModel>

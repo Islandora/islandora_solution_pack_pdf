@@ -35,13 +35,19 @@ function islandora_pdf_admin($form, &$form_state) {
 
   $form['islandora_pdf_url_fieldset']['islandora_pdf_allow_text_upload'] = array(
     '#type' => 'checkbox',
-    '#title' => t("Allow users to upload text file with PDF?"),
+    '#title' => t("Allow users to upload .txt files with PDFs"),
+    '#description' => t("Uploaded text files are appended to PDFs as FULL_TEXT datastreams and are indexed into Solr."),
     '#default_value' => variable_get('islandora_pdf_allow_text_upload', FALSE)
   );
 
   $form['islandora_pdf_url_fieldset']['islandora_pdf_create_fulltext'] = array(
     '#type' => 'checkbox',
-    '#title' => t("Store extracted (or supplied) text?"),
+    '#title' => t("Extract text streams from PDFs using pdftotext"),
+    '#description' => t("Extracted text streams are appended to PDFs as FULL_TEXT datastreams and are indexed into Solr. Uploading a text file takes priority over text stream extraction.
+                         </br><strong>Note:</strong> PDFs that contain visible text do not necessarily contain text streams (e.g. images scanned and saved as PDFs). Consider converting text-filled images with no text streams to TIFFs and using the !book with !ocr enabled.", array(
+                         '!book' => l(t('Book Solution Pack'), 'https://wiki.duraspace.org/display/ISLANDORA711/Book+Solution+Pack'),
+                         '!ocr' => l(t('OCR'), 'https://wiki.duraspace.org/display/ISLANDORA711/Islandora+OCR'),
+                         )),
     '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE)
   );
 
@@ -60,7 +66,7 @@ function islandora_pdf_admin($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Path to pdftotext executable'),
     '#default_value' => $islandora_pdf_path_to_pdftotext,
-    '#description' => t('Path to pdftotext <br /> !confirmation_message',
+    '#description' => t('!confirmation_message',
         array(
           '!confirmation_message' => $confirmation_message)
     ),
@@ -82,7 +88,7 @@ function islandora_pdf_admin($form, &$form_state) {
   $form['islandora_pdf_thumbnail_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Thumbnail'),
-    '#description' => t('Settings for PDF thumbnails'),
+    '#description' => t('Settings for creating PDF thumbnail derivatives'),
   );
 
   $form['islandora_pdf_thumbnail_fieldset']['islandora_pdf_thumbnail_width'] = array(
@@ -106,7 +112,7 @@ function islandora_pdf_admin($form, &$form_state) {
   $form['islandora_pdf_preview_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Preview image'),
-    '#description' => t('Settings for PDF preview image'),
+    '#description' => t('Settings for creating PDF preview image derivatives'),
   );
 
   $form['islandora_pdf_preview_fieldset']['islandora_pdf_preview_width'] = array(

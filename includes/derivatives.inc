@@ -17,7 +17,7 @@
  */
 function islandora_pdf_create_all_derivatives(FedoraObject $object) {
   if (!isset($object['OBJ'])) {
-    drupal_set_message(t('Could not create image derivatives for %s.  No image file was uploaded.', array('%s' => $object->id)), 'error');
+    drupal_set_message(t('Could not create image derivatives for %s. No image file was uploaded.', array('%s' => $object->id)), 'error');
     return FALSE;
   }
   $success = TRUE;
@@ -92,7 +92,7 @@ function islandora_pdf_add_fulltext_derivative(FedoraObject $object, $file_uri) 
   if (! $success) {
     watchdog(
         'islandora_solution_pack_pdf',
-        t('`%command` returned error when creating %dsid derivative of PID %pid: %error'),
+        t('`%command` returned an error when creating %dsid derivative of PID %pid: %error'),
         array(
             '%command' => $command,
             '%dsid' => $dsid,
@@ -154,7 +154,7 @@ function islandora_pdf_add_jpg_derivative(FedoraObject $object, $file_uri, $dsid
     file_unmanaged_delete($derivative_file_uri);
   }
   if ($success == FALSE) {
-    drupal_set_message(t('Failed to create @dsid derivative.', array('@dsid' => $dsid)), 'error');
+    drupal_set_message(t('Failed to create JPG derivative for @dsid.', array('@dsid' => $dsid)), 'error');
   }
   return $success;
 }
@@ -196,7 +196,7 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
   $output = '';
   $ret = -1;
   if (_imagemagick_convert_exec($command, $output, $ret) !== TRUE) {
-    $message = 'imagemagick convert failed to create derivative<br/>Error: @ret<br/>Command: @command<br/>Output: @output';
+    $message = 'ImageMagick failed to create derivatives<br/>Error: @ret<br/>Command: @command<br/>Output: @output';
     $variables = array('@ret' => $ret, '@command' => $command, '@output' => $output);
     watchdog('islandora_pdf', $message, $variables, WATCHDOG_ERROR);
     return FALSE;

@@ -130,7 +130,7 @@ function islandora_pdf_islandora_content_model_forms_form_associations() {
 /**
  * Implements hook_islandora_ingest_steps().
  */
-function islandora_pdf_islandora_sp_pdf_islandora_ingest_steps(array $configuration) {
+function islandora_pdf_islandora_sp_pdf_islandora_ingest_steps() {
   return array(
     'islandora_pdf_file_upload' => array(
       'weight' => 10,

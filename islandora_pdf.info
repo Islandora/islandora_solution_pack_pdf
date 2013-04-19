@@ -1,5 +1,5 @@
 name = "Islandora PDF"
-description = "A default Islandora Repository module to handle PDF files"
+description = "Islandora Repository PDF Module"
 dependencies[] = islandora
 dependencies[] = imagemagick
 package = Islandora
@@ -7,3 +7,4 @@ core = 7.x
 version = 7.x-dev
 configure = admin/islandora/pdf
 stylesheets[all][] = css/islandora_pdf.theme.css
+files[] = tests/islandora_pdf_batch_ingest_purge.test

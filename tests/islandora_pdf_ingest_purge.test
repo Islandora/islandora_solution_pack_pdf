@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * Attempts to ingest a PDF into a randomly generated PDF collection
+ */
+
+class IslandoraPdfIngestTestCase extends CollectionWebTestCase {
+
+  /**
+   * Get test information.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'PDF Ingest/Purge',
+      'description' => 'Ingests and purges a PDF from a randomly generated PDF collection',
+      'group' => 'Islandora Object Management',
+    );
+  }
+
+  /**
+   * Set up the test environment.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    parent::setUp(array(
+      'islandora',
+      'islandora_pdf',
+      'islandora_basic_collection',
+      'imagemagick',
+    ));
+  }
+
+  /**
+   * Creates an administrative user and attempts to ingest a test image.
+   */
+  public function testIngestPurgePdf() {
+
+    // Sets up the testing space.
+    $user = $this->createDrupalAdminUser();
+    $this->drupalLogin($user);
+    $label = $this->randomName(16);
+    $suffix = $this->randomName(16);
+    $collectionpid = 'islandora:' . $suffix;
+    $this->createRootTestCollection($label, 'islandora:sp_pdf', $collectionpid);
+    $edit = array(
+      'islandora_pdf_allow_text_upload' => TRUE,
+      'islandora_pdf_create_fulltext' => FALSE,
+    );
+    $this->drupalPost('admin/islandora/pdf', $edit, 'Save configuration');
+
+    // Attempts to create an object.
+    $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
+    $file = drupal_get_path('module', 'islandora_pdf') . '/tests/fixtures/test.pdf';
+    $text = drupal_get_path('module', 'islandora_pdf') . '/tests/fixtures/test.txt';
+    $edit = array(
+      'files[file]' => $file,
+      'islandora_pdf_text_upload' => TRUE,
+      'files[text]' => $text,
+    );
+    $this->drupalPost($path, $edit, t('Ingest'));
+    $this->assertText('New Object', 'PDF was created', 'Islandora');
+    $path = $this->url;
+    $pdfpath = $path . '/datastream/OBJ/view';
+    $this->assertLinkByHref($pdfpath, 0, 'PDF PREVIEW datastream found on view page', 'Islandora');
+    $this->assertLink('Download pdf', 0, 'PDF download link found on view page', 'Islandora');
+
+    // Determines whether or not the appropriate datastreams were created.
+    $objectpid = arg(5, $this->url);
+    $datastreams = array(
+      'RELS-EXT',
+      'DC',
+      'OBJ',
+      'FULL_TEXT',
+      'TN',
+      'PREVIEW',
+    );
+    $this->assertDatastreams($objectpid, $datastreams);
+
+    // Checks the FULL_TEXT datastream for correct text
+    $this->clickLink('FULL_TEXT');
+    $this->assertText('Misthallery, Gressenheller, Folsense, Akbadain', 'Text from tests/fixtures/test.txt found in the FULL_TEXT datastream', 'Islandora');
+
+    // Attempts to delete the object and then collection.
+    $this->deleteTestObject($objectpid, 'New Object');
+    $this->deleteRootTestCollectionByPid($collectionpid);
+  }
+}

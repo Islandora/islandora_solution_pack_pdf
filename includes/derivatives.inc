@@ -9,13 +9,13 @@
 /**
  * Creates all the derivatives for this content model type
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to generate/add the deriviative datastreams to.
  *
  * @return boolean
  *   TRUE if all derivatives were created successfully, FALSE otherwise.
  */
-function islandora_pdf_create_all_derivatives(FedoraObject $object) {
+function islandora_pdf_create_all_derivatives(AbstractObject $object) {
   if (!isset($object['OBJ'])) {
     drupal_set_message(t('Could not create image derivatives for %s.  No image file was uploaded.', array('%s' => $object->id)), 'error');
     return FALSE;
@@ -35,13 +35,13 @@ function islandora_pdf_create_all_derivatives(FedoraObject $object) {
 /**
  * Gets the source of all derivatives as an unmanaged file, deletion of the file is left to the caller.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to generate/add the deriviative datastreams to.
  *
  * @return string
  *   The file path to the unmanaged derivative source file.
  */
-function islandora_pdf_get_derivative_source_as_unmanaged_file(FedoraObject $object) {
+function islandora_pdf_get_derivative_source_as_unmanaged_file(AbstractObject $object) {
   $mime_detect = new MimeDetect();
   $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
   $file_name = str_replace(':', '-', $object->id);
@@ -53,7 +53,7 @@ function islandora_pdf_get_derivative_source_as_unmanaged_file(FedoraObject $obj
 /**
  * Creates a JPG deriviative for the TN datastream.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to add the deriviative datastreams to.
  * @param string $file_uri
  *   The URI to the pdf file the derivative will be generated from.
@@ -61,7 +61,7 @@ function islandora_pdf_get_derivative_source_as_unmanaged_file(FedoraObject $obj
  * @return boolean
  *   TRUE if successful, FALSE otherwise.
  */
-function islandora_pdf_add_tn_derivative(FedoraObject $object, $file_uri) {
+function islandora_pdf_add_tn_derivative(AbstractObject $object, $file_uri) {
   $width = variable_get('islandora_pdf_thumbnail_width', 200);
   $height = variable_get('islandora_pdf_thumbnail_height', 200);
   return islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height);
@@ -70,7 +70,7 @@ function islandora_pdf_add_tn_derivative(FedoraObject $object, $file_uri) {
 /**
  * Creates a textual derivative for the FULL_TEXT datastream.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to add the deriviative datastreams to.
  * @param string $file_uri
  *   The URI to the pdf file the derivative will be generated from.
@@ -78,7 +78,7 @@ function islandora_pdf_add_tn_derivative(FedoraObject $object, $file_uri) {
  * @return boolean
  *   TRUE if successful, FALSE otherwise.
  */
-function islandora_pdf_add_fulltext_derivative(FedoraObject $object, $file_uri) {
+function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $file_uri) {
   $dsid = "FULL_TEXT";
   $source = $source = drupal_realpath($file_uri);
   $success = FALSE;
@@ -115,7 +115,7 @@ function islandora_pdf_add_fulltext_derivative(FedoraObject $object, $file_uri) 
 /**
  * Creates a JPG deriviative for the PREVIEW datastream.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to add the deriviative datastreams to.
  * @param string $file_uri
  *   The URI to the pdf file the derivative will be generated from.
@@ -123,7 +123,7 @@ function islandora_pdf_add_fulltext_derivative(FedoraObject $object, $file_uri) 
  * @return boolean
  *   TRUE if successful, FALSE otherwise.
  */
-function islandora_pdf_add_preview_derivative(FedoraObject $object, $file_uri) {
+function islandora_pdf_add_preview_derivative(AbstractObject $object, $file_uri) {
   $width = variable_get('islandora_pdf_preview_width', 500);
   $height = variable_get('islandora_pdf_preview_height', 700);
   return islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height);
@@ -132,7 +132,7 @@ function islandora_pdf_add_preview_derivative(FedoraObject $object, $file_uri) {
 /**
  * Creates a JPG deriviative of the given file.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to add the deriviative datastreams to.
  * @param string $file_uri
  *   The URI to the pdf file the derivative will be generated from.
@@ -146,7 +146,7 @@ function islandora_pdf_add_preview_derivative(FedoraObject $object, $file_uri) {
  * @return boolean
  *   TRUE if successful, FALSE otherwise.
  */
-function islandora_pdf_add_jpg_derivative(FedoraObject $object, $file_uri, $dsid, $width, $height) {
+function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $dsid, $width, $height) {
   $success = FALSE;
   $derivative_file_uri = islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height);
   if ($derivative_file_uri !== FALSE) {
@@ -207,7 +207,7 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
 /**
  * Adds the given file as a datastream to the given object using the given datastream id to identify it.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to add the datasteam to.
  * @param string $datastream_id
  *   The datastream id of the added datastream.

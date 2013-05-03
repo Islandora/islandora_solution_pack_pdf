@@ -17,7 +17,7 @@ before_install:
   - drush en --yes islandora_solution_pack_pdf
 script:
   - ant -buildfile sites/all/modules/islandora_solution_pack_pdf/build.xml lint
-  - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_solution_pack_pdf
+  - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_pdf
   - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_solution_pack_pdf
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_solution_pack_pdf
   - drush test-run --uri=http://localhost:8081 "Islandora Solution Pack PDF"

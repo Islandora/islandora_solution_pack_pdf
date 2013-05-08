@@ -6,7 +6,7 @@
  */
 
 /**
- * Admin form function
+ * Admin form function.
  */
 function islandora_pdf_admin($form, &$form_state) {
 
@@ -26,8 +26,7 @@ function islandora_pdf_admin($form, &$form_state) {
 
   $form = array();
 
-
-  // ajax wrapper for url checking
+  // AJAX wrapper for url checking.
   $form['islandora_pdf_url_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('TEXT'),
@@ -36,13 +35,13 @@ function islandora_pdf_admin($form, &$form_state) {
   $form['islandora_pdf_url_fieldset']['islandora_pdf_allow_text_upload'] = array(
     '#type' => 'checkbox',
     '#title' => t("Allow users to upload text file with PDF?"),
-    '#default_value' => variable_get('islandora_pdf_allow_text_upload', FALSE)
+    '#default_value' => variable_get('islandora_pdf_allow_text_upload', FALSE),
   );
 
   $form['islandora_pdf_url_fieldset']['islandora_pdf_create_fulltext'] = array(
     '#type' => 'checkbox',
     '#title' => t("Store extracted (or supplied) text?"),
-    '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE)
+    '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE),
   );
 
   $form['islandora_pdf_url_fieldset']['wrapper'] = array(
@@ -75,9 +74,8 @@ function islandora_pdf_admin($form, &$form_state) {
       'visible' => array(
         ':input[name="islandora_pdf_create_fulltext"]' => array('checked' => TRUE),
       ),
-    )
+    ),
   );
-
 
   $form['islandora_pdf_thumbnail_fieldset'] = array(
     '#type' => 'fieldset',
@@ -131,7 +129,7 @@ function islandora_pdf_admin($form, &$form_state) {
 }
 
 /**
- * Admin form validate function
+ * Admin form validate function.
  */
 function islandora_pdf_admin_validate($form, &$form_state) {
   if ($form_state['values']['islandora_pdf_create_fulltext']) {
@@ -143,6 +141,9 @@ function islandora_pdf_admin_validate($form, &$form_state) {
   }
 }
 
+/**
+ *
+ */
 function islandora_update_pdftotext_url_div($form, $form_state) {
   unset($form_state['submit_handlers']);
   $form_state['rebuild'] = TRUE;

@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Handles the creation/display of islandora:sp-pdf objects.
  */
 
@@ -19,7 +18,7 @@ function islandora_pdf_menu() {
       'page arguments' => array('islandora_pdf_admin'),
       'file' => 'includes/admin.form.inc',
       'type' => MENU_NORMAL_ITEM,
-    )
+    ),
   );
 }
 
@@ -33,7 +32,7 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
       'template' => 'theme/islandora-pdf',
       'pattern' => 'islandora_pdf__',
       'variables' => array('islandora_object' => NULL),
-    )
+    ),
   );
 }
 
@@ -42,30 +41,30 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
  */
 function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_pdf');
-  // PDF Content Model
+  // PDF Content Model.
   $pdf_content_model = $connection->repository->constructObject('islandora:sp_pdf');
   $pdf_content_model->owner = 'fedoraAdmin';
   $pdf_content_model->label = 'Islandora PDF Content Model';
   $pdf_content_model->models = 'fedora-system:ContentModel-3.0';
-  // DS-COMPOSITE-MODEL Datastream
+  // DS-COMPOSITE-MODEL Datastream.
   $datastream = $pdf_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
   $datastream->label = 'DS-COMPOSITE-MODEL';
   $datastream->mimetype = 'text/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_pdf_ds_composite_model.xml", FALSE);
   $pdf_content_model->ingestDatastream($datastream);
-  // PDF Collection
+  // PDF Collection.
   $pdf_collection = $connection->repository->constructObject('islandora:sp_pdf_collection');
   $pdf_collection->owner = 'fedoraAdmin';
   $pdf_collection->label = 'PDF Collection';
   $pdf_collection->models = 'islandora:collectionCModel';
   $pdf_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
-  // Collection Policy Datastream
+  // Collection Policy Datastream.
   $datastream = $pdf_collection->constructDatastream('COLLECTION_POLICY', 'X');
   $datastream->label = 'Collection policy';
   $datastream->mimetype = 'text/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_pdf_collection_policy.xml", FALSE);
   $pdf_collection->ingestDatastream($datastream);
-  // TN Datastream
+  // TN Datastream.
   $datastream = $pdf_collection->constructDatastream('TN', 'M');
   $datastream->label = 'Thumbnail';
   $datastream->mimetype = 'image/png';
@@ -76,9 +75,9 @@ function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
       'title' => 'Islandora PDF',
       'objects' => array(
         $pdf_content_model,
-        $pdf_collection
-      )
-    )
+        $pdf_collection,
+      ),
+    ),
   );
 }
 
@@ -93,7 +92,6 @@ function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_num
 /**
  * Implements hook_CMODEL_PID_islandora_object_ingested().
  */
-
 function islandora_pdf_islandora_sp_pdf_islandora_object_ingested($object) {
   module_load_include('inc', 'islandora_pdf', 'includes/derivatives');
   islandora_pdf_create_all_derivatives($object);
@@ -137,7 +135,7 @@ function islandora_pdf_islandora_sp_pdf_islandora_ingest_steps() {
       'type' => 'form',
       'form_id' => 'islandora_pdf_pdf_upload_form',
       'module' => 'islandora_pdf',
-      'file' => 'includes/pdf_upload.form.inc'
-    )
+      'file' => 'includes/pdf_upload.form.inc',
+    ),
   );
 }

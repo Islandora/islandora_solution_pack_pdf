@@ -5,7 +5,7 @@
  * Attempts to ingest a batch of PDFs into a randomly generated PDF collection.
  */
 
-class IslandoraPdfBatchIngestTestCase extends CollectionWebTestCase {
+class IslandoraPdfBatchIngestTestCase extends IslandoraCollectionWebTestCase {
 
   /**
    * Get test information.

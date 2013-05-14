@@ -6,11 +6,7 @@
  */
 
 /**
- *
- * @global type $base_url
- *
- * @param array $variables
- *   an array of variables that will be passed to the theme function
+ * Preprocessor function for the pdf theme hook.
  */
 function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   drupal_add_js('misc/form.js');

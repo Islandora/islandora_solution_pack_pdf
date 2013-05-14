@@ -2,7 +2,10 @@
 
 /**
  * @file
- * Functions required for adding derived datastreams from the uploaded file for the PDF content model.
+ * Functions required for adding derivatives.
+ *
+ * This file contains the functions needed to create derived datastreams from
+ * the uploaded file for the PDF content model.
  */
 
 /**
@@ -32,7 +35,10 @@ function islandora_pdf_create_all_derivatives(FedoraObject $object) {
 }
 
 /**
- * Gets the source of all derivatives as an unmanaged file, deletion of the file is left to the caller.
+ * Gets the source of all derivatives as an unmanaged file.
+ *
+ * This function leaves the deletion of the file to the caller. If the files
+ * are not deleted they will stay on the filesystem.
  *
  * @param FedoraObject $object
  *   The object to generate/add the deriviative datastreams to.
@@ -197,20 +203,25 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
   $output = '';
   $ret = -1;
   if (_imagemagick_convert_exec($command, $output, $ret) !== TRUE) {
-    $message = 'imagemagick convert failed to create derivative<br/>Error: @ret<br/>Command: @command<br/>Output: @output';
-    $variables = array(
-      '@ret' => $ret,
-      '@command' => $command,
-      '@output' => $output,
+    watchdog('islandora_pdf',
+      'imagemagick convert failed to create derivative<br/>Error: @ret<br/>Command: @command<br/>Output: @output',
+      array(
+        '@ret' => $ret,
+        '@command' => $command,
+        '@output' => $output,
+      ),
+      WATCHDOG_ERROR
     );
-    watchdog('islandora_pdf', $message, $variables, WATCHDOG_ERROR);
     return FALSE;
   }
   return $dest;
 }
 
 /**
- * Adds the given file as a datastream to the given object using the given datastream id to identify it.
+ * Adds $file_uri as a datastream to the object as given datastream id.
+ *
+ * The label will just be the datastream ID and the mimetype will be
+ * detected by the mimetype class. These datastreams are always managed.
  *
  * @param FedoraObject $object
  *   The object to add the datasteam to.

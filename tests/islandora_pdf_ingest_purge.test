@@ -16,7 +16,7 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
     return array(
       'name' => 'PDF Ingest/Purge',
       'description' => 'Ingests and purges a PDF from a randomly generated PDF collection',
-      'group' => 'Islandora Object Management',
+      'group' => 'Islandora PDF',
     );
   }
 
@@ -26,6 +26,7 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
    * @see IslandoraWebTestCase::setUp()
    */
   public function setUp() {
+    $this->imagemagick_convert = variable_get('imagemagick_convert');
     parent::setUp(array(
       'islandora',
       'islandora_pdf',
@@ -39,18 +40,30 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
    */
   public function testIngestPurgePdf() {
 
-    // Sets up the testing space.
-    $user = $this->createDrupalAdminUser();
+    $user = $this->drupalCreateUser(array(
+      'view fedora repository objects',
+      'ingest fedora objects',
+      'administer site configuration',
+    ));
     $this->drupalLogin($user);
+
     $label = $this->randomName(16);
     $suffix = $this->randomName(16);
     $collectionpid = 'islandora:' . $suffix;
-    $this->createRootTestCollection($label, 'islandora:sp_pdf', $collectionpid);
+    $this->createTestCollection($label, 'islandora:sp_pdf', $collectionpid);
     $edit = array(
       'islandora_pdf_allow_text_upload' => TRUE,
       'islandora_pdf_create_fulltext' => FALSE,
     );
     $this->drupalPost('admin/islandora/pdf', $edit, 'Save configuration');
+    $edit = array(
+      'image_toolkit' => 'imagemagick',
+    );
+    $this->drupalPost('admin/config/media/image-toolkit', $edit, 'Save configuration');
+    $edit = array(
+      'imagemagick_convert' => $this->imagemagick_convert,
+    );
+    $this->drupalPost('admin/config/media/image-toolkit', $edit, 'Save configuration');
 
     // Attempts to create an object.
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
@@ -66,10 +79,10 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
     $path = $this->url;
     $pdfpath = $path . '/datastream/OBJ/view';
     $this->assertLinkByHref($pdfpath, 0, 'PDF PREVIEW datastream found on view page', 'Islandora');
-    $this->assertLink('Download pdf', 0, 'PDF download link found on view page', 'Islandora');
+    $this->assertRaw('/datastream/OBJ/download', 0, 'PDF download link found on view page', 'Islandora');
 
     // Determines whether or not the appropriate datastreams were created.
-    $objectpid = arg(5, $this->url);
+    $object = $this->getPidFromPath($this->url);
     $datastreams = array(
       'RELS-EXT',
       'DC',
@@ -78,14 +91,14 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
       'TN',
       'PREVIEW',
     );
-    $this->assertDatastreams($objectpid, $datastreams);
+    $this->assertDatastreams($object, $datastreams);
 
     // Checks the FULL_TEXT datastream for correct text
-    $this->clickLink('FULL_TEXT');
+    $this->drupalGet('islandora/object/' . $object . '/datastream/FULL_TEXT/view');
     $this->assertText('Misthallery, Gressenheller, Folsense, Akbadain', 'Text from tests/fixtures/test.txt found in the FULL_TEXT datastream', 'Islandora');
 
     // Attempts to delete the object and then collection.
-    $this->deleteTestObject($objectpid, 'New Object');
-    $this->deleteRootTestCollectionByPid($collectionpid);
+    $this->deleteObject($object, 'New Object');
+    $this->deleteTestCollection($collectionpid);
   }
 }

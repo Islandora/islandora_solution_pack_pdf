@@ -91,7 +91,11 @@ function islandora_pdf_add_fulltext_derivative(FedoraObject $object, $file_uri) 
   if (!$success) {
     watchdog(
         'islandora_solution_pack_pdf',
+<<<<<<< HEAD
         '`%command` returned error when creating %dsid derivative of PID %pid: %error',
+=======
+        t('`%command` returned an error when creating %dsid derivative of PID %pid: %error'),
+>>>>>>> 267da6dbfdaa63a628db82d62ed770c8180fe3a4
         array(
           '%command' => $command,
           '%dsid' => $dsid,
@@ -197,12 +201,17 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
   $output = '';
   $ret = -1;
   if (_imagemagick_convert_exec($command, $output, $ret) !== TRUE) {
-    $message = 'ImageMagick failed to create derivatives<br/>Error: @ret<br/>Command: @command<br/>Output: @output';
-    $variables = array('@ret' => $ret, '@command' => $command, '@output' => $output);
+<<<<<<< HEAD
+    $message = 'imagemagick convert failed to create derivative<br/>Error: @ret<br/>Command: @command<br/>Output: @output';
+    $variables = array(
       '@ret' => $ret,
       '@command' => $command,
       '@output' => $output,
     );
+=======
+    $message = 'ImageMagick failed to create derivatives<br/>Error: @ret<br/>Command: @command<br/>Output: @output';
+    $variables = array('@ret' => $ret, '@command' => $command, '@output' => $output);
+>>>>>>> 267da6dbfdaa63a628db82d62ed770c8180fe3a4
     watchdog('islandora_pdf', $message, $variables, WATCHDOG_ERROR);
     return FALSE;
   }

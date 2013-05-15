@@ -130,7 +130,16 @@ function islandora_pdf_islandora_content_model_forms_form_associations() {
 /**
  * Implements hook_islandora_ingest_steps().
  */
-function islandora_pdf_islandora_sp_pdf_islandora_ingest_steps() {
+function islandora_pdf_islandora_sp_pdf_islandora_ingest_steps(array &$form_state) {
+  $shared_storage = &islandora_ingest_form_get_shared_storage($form_state);
+  $step_storage = &islandora_ingest_form_get_step_storage($form_state, 'islandora_basic_collection_select_content_model');
+  // Avoid D6 backwards compatibility nightmares.
+  if (isset($shared_storage['models']) && ($key = array_search('islandora:sp_strict_pdf', $shared_storage['models'])) !== false) {
+    unset($shared_storage['models'][$key]);
+  }
+  if (isset($step_storage['models']) && ($key = array_search('islandora:sp_strict_pdf', $step_storage['models'])) !== false) {
+    unset($step_storage['models'][$key]);
+  }
   return array(
     'islandora_pdf_file_upload' => array(
       'weight' => 10,

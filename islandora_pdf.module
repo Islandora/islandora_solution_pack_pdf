@@ -12,8 +12,8 @@
 function islandora_pdf_menu() {
   return array(
     'admin/islandora/pdf' => array(
-      'title' => 'PDF Module',
-      'description' => 'Configure the PDF solution pack.',
+      'title' => 'PDF Collection',
+      'description' => 'Configure the PDF Solution Pack.',
       'page callback' => 'drupal_get_form',
       'access arguments' => array('administer site configuration'),
       'page arguments' => array('islandora_pdf_admin'),

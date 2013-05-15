@@ -147,7 +147,7 @@ function islandora_pdf_admin_validate($form, &$form_state) {
 }
 
 /**
- *
+ * AJAX callback for admin form.
  */
 function islandora_update_pdftotext_url_div($form, $form_state) {
   unset($form_state['submit_handlers']);

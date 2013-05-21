@@ -34,22 +34,17 @@ function islandora_pdf_admin($form, &$form_state) {
 
   $form['islandora_pdf_url_fieldset']['islandora_pdf_allow_text_upload'] = array(
     '#type' => 'checkbox',
-<<<<<<< HEAD
-    '#title' => t("Allow users to upload text file with PDF?"),
-    '#default_value' => variable_get('islandora_pdf_allow_text_upload', FALSE),
-=======
     '#title' => t("Allow users to upload .txt files with PDFs"),
     '#description' => t("Uploaded text files are appended to PDFs as FULL_TEXT datastreams and are indexed into Solr."),
+<<<<<<< HEAD
+    '#default_value' => variable_get('islandora_pdf_allow_text_upload', FALSE),
+=======
     '#default_value' => variable_get('islandora_pdf_allow_text_upload', FALSE)
->>>>>>> 267da6dbfdaa63a628db82d62ed770c8180fe3a4
+>>>>>>> 63966c2445ae543aee19e79b69b9b8ed1f967418
   );
 
   $form['islandora_pdf_url_fieldset']['islandora_pdf_create_fulltext'] = array(
     '#type' => 'checkbox',
-<<<<<<< HEAD
-    '#title' => t("Store extracted (or supplied) text?"),
-    '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE),
-=======
     '#title' => t("Extract text streams from PDFs using pdftotext"),
     '#description' => t("Extracted text streams are appended to PDFs as FULL_TEXT datastreams and are indexed into Solr. Uploading a text file takes priority over text stream extraction.
                          </br><strong>Note:</strong> PDFs that contain visible text do not necessarily contain text streams (e.g. images scanned and saved as PDFs). Consider converting text-filled images with no text streams to TIFFs and using the !book with !ocr enabled.", array(
@@ -57,7 +52,6 @@ function islandora_pdf_admin($form, &$form_state) {
                          '!ocr' => l(t('OCR'), 'https://wiki.duraspace.org/display/ISLANDORA711/Islandora+OCR'),
                          )),
     '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE)
->>>>>>> 267da6dbfdaa63a628db82d62ed770c8180fe3a4
   );
 
   $form['islandora_pdf_url_fieldset']['wrapper'] = array(
@@ -92,7 +86,6 @@ function islandora_pdf_admin($form, &$form_state) {
       ),
     ),
   );
-
   $form['islandora_pdf_thumbnail_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Thumbnail'),
@@ -158,7 +151,7 @@ function islandora_pdf_admin_validate($form, &$form_state) {
 }
 
 /**
- *
+ * AJAX callback for admin form.
  */
 function islandora_update_pdftotext_url_div($form, $form_state) {
   unset($form_state['submit_handlers']);

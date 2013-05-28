@@ -82,7 +82,7 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
     $this->assertRaw('/datastream/OBJ/download', 0, 'PDF download link found on view page', 'Islandora');
 
     // Determines whether or not the appropriate datastreams were created.
-    $object = $this->getPidFromPath($this->url);
+    $object = $this->getObjectFromPath($this->url);
     $datastreams = array(
       'RELS-EXT',
       'DC',

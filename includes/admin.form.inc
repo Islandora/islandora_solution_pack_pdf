@@ -44,10 +44,10 @@ function islandora_pdf_admin($form, &$form_state) {
     '#title' => t("Extract text streams from PDFs using pdftotext"),
     '#description' => t("Extracted text streams are appended to PDFs as FULL_TEXT datastreams and are indexed into Solr. Uploading a text file takes priority over text stream extraction.
                          </br><strong>Note:</strong> PDFs that contain visible text do not necessarily contain text streams (e.g. images scanned and saved as PDFs). Consider converting text-filled images with no text streams to TIFFs and using the !book with !ocr enabled.", array(
-                         '!book' => l(t('Book Solution Pack'), 'https://wiki.duraspace.org/display/ISLANDORA711/Book+Solution+Pack'),
-                         '!ocr' => l(t('OCR'), 'https://wiki.duraspace.org/display/ISLANDORA711/Islandora+OCR'),
+                           '!book' => l(t('Book Solution Pack'), 'https://wiki.duraspace.org/display/ISLANDORA711/Book+Solution+Pack'),
+                           '!ocr' => l(t('OCR'), 'https://wiki.duraspace.org/display/ISLANDORA711/Islandora+OCR'),
                          )),
-    '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE)
+    '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE),
   );
 
   $form['islandora_pdf_url_fieldset']['wrapper'] = array(

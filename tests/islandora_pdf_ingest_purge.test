@@ -93,7 +93,7 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
     );
     $this->assertDatastreams($object, $datastreams);
 
-    // Checks the FULL_TEXT datastream for correct text
+    // Checks the FULL_TEXT datastream for correct text.
     $this->drupalGet('islandora/object/' . $object . '/datastream/FULL_TEXT/view');
     $this->assertText('Misthallery, Gressenheller, Folsense, Akbadain', 'Text from tests/fixtures/test.txt found in the FULL_TEXT datastream', 'Islandora');
 

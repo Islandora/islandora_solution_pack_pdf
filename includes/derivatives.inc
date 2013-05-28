@@ -97,7 +97,7 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $file_uri
   if (!$success) {
     watchdog(
         'islandora_solution_pack_pdf',
-        t('`%command` returned an error when creating %dsid derivative of PID %pid: %error'),
+        '`%command` returned an error when creating %dsid derivative of PID %pid: %error',
         array(
           '%command' => $command,
           '%dsid' => $dsid,

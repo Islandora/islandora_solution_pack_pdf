@@ -140,7 +140,7 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
     }
 
     // Attempts to delete the object and then collection.
-    $this->deleteObject($object, 'New Object');
+    $this->deleteObject($object);
     $this->deleteTestCollection($collectionpid);
   }
 }

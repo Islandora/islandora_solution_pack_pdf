@@ -127,6 +127,8 @@ function islandora_pdf_admin($form, &$form_state) {
     '#size' => 5,
   );
 
+  module_load_include('inc', 'islandora', 'includes/solution_packs');
+  $form += islandora_viewers_form('islandora_pdf_viewers', 'application/pdf');
   return system_settings_form($form);
 }
 

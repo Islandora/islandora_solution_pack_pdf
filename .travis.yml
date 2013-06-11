@@ -16,6 +16,7 @@ before_install:
   - cd $HOME/drupal-*
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_solution_pack_pdf
   - ln -s $HOME/islandora_solution_pack_collection sites/all/modules/islandora_solution_pack_collection
+  - drush en --user=1 --yes islandora_basic_collection
   - drush en --yes islandora_solution_pack_pdf
 script:
   - ant -buildfile sites/all/modules/islandora_solution_pack_pdf/build.xml lint

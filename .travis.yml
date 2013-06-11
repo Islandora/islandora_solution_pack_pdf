@@ -10,10 +10,12 @@ env:
 before_install:
   - cd $HOME
   - git clone -b 7.x git://github.com/Islandora/islandora.git
+  - git clone -b 7.x git://github.com/Islandora/islandora_solution_pack_collection.git
   - export ISLANDORA_DIR=$HOME/islandora
   - $HOME/islandora/tests/scripts/travis_setup.sh
   - cd $HOME/drupal-*
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_solution_pack_pdf
+  - ln -s $HOME/islandora_solution_pack_collection sites/all/modules/islandora_solution_pack_collection
   - drush en --yes islandora_solution_pack_pdf
 script:
   - ant -buildfile sites/all/modules/islandora_solution_pack_pdf/build.xml lint
@@ -21,4 +23,3 @@ script:
   - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_pdf
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_solution_pack_pdf
   - drush test-run --uri=http://localhost:8081 "Islandora PDF"
-  # - php $HOME/drupal-*/scripts/run-tests.sh --verbose --php /usr/bin/php "Islandora PDF"

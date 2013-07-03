@@ -1,5 +1,5 @@
 name = "Islandora PDF"
-description = "Islandora Repository PDF Module"
+description = "A default Islandora Repository module to handle PDF files"
 dependencies[] = islandora
 dependencies[] = imagemagick
 package = Islandora

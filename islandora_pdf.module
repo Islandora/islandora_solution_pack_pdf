@@ -12,8 +12,8 @@
 function islandora_pdf_menu() {
   return array(
     'admin/islandora/pdf' => array(
-      'title' => 'PDF Module',
-      'description' => 'Configure the PDF solution pack.',
+      'title' => 'PDF Collection',
+      'description' => 'Configure the PDF Solution Pack.',
       'page callback' => 'drupal_get_form',
       'access arguments' => array('administer site configuration'),
       'page arguments' => array('islandora_pdf_admin'),
@@ -130,7 +130,7 @@ function islandora_pdf_islandora_content_model_forms_form_associations() {
 /**
  * Implements hook_islandora_ingest_steps().
  */
-function islandora_pdf_islandora_sp_pdf_islandora_ingest_steps(array $configuration) {
+function islandora_pdf_islandora_sp_pdf_islandora_ingest_steps() {
   return array(
     'islandora_pdf_file_upload' => array(
       'weight' => 10,

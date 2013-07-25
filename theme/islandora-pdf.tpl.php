@@ -8,7 +8,7 @@
  */
 ?>
 
-<div class="islandora-pdf-object islandora">
+<div class="islandora-pdf-object islandora" itemscope itemprop="http://schema.org/Book">
   <div class="islandora-pdf-content-wrapper clearfix">
     <?php if (isset($islandora_content)): ?>
       <div class="islandora-pdf-content">
@@ -19,7 +19,7 @@
   <div class="islandora-pdf-sidebar">
     <?php if (!empty($dc_array['dc:description']['value'])): ?>
       <h2><?php print $dc_array['dc:description']['label']; ?></h2>
-      <p><?php print $dc_array['dc:description']['value']; ?></p>
+      <p itemprop="description"><?php print $dc_array['dc:description']['value']; ?></p>
     <?php endif; ?>
     <?php if($parent_collections): ?>
       <div>
@@ -36,10 +36,10 @@
   <fieldset class="collapsible collapsed islandora-pdf-metadata">
   <legend><span class="fieldset-legend"><?php print t('Extended details'); ?></span></legend>
     <div class="fieldset-wrapper">
-      <dl class="islandora-inline-metadata islandora-pdf-fields">
+      <dl xmlns:dcterms="http://purl.org/dc/terms/" class="islandora-inline-metadata islandora-pdf-fields">
         <?php $row_field = 0; ?>
         <?php foreach ($dc_array as $key => $value): ?>
-          <dt class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+          <dt property="<?php print $value['dcterms']; ?>" content="<?php print $value['value']; ?>" class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
             <?php print $value['label']; ?>
           </dt>
           <dd class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">

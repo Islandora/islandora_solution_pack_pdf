@@ -1,3 +1,10 @@
+BUILD STATUS
+------------
+Current build status:
+[![Build Status](https://travis-ci.org/Islandora/islandora_solution_pack_pdf.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_solution_pack_pdf)
+
+CI Server:
+http://jenkins.discoverygarden.ca
 
 CONTENTS OF THIS FILE
 ---------------------

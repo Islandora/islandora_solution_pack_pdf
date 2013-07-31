@@ -44,9 +44,12 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
       'view fedora repository objects',
       'ingest fedora objects',
       'administer site configuration',
+<<<<<<< HEAD
+=======
       'manage object properties',
       'delete fedora objects and datastreams',
       'create child collection',
+>>>>>>> df8eb5fea744dfce8d31aecc077502664fe3c5b3
     ));
     $this->drupalLogin($user);
 
@@ -72,9 +75,12 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
     $file = drupal_get_path('module', 'islandora_pdf') . '/tests/fixtures/test.pdf';
     $text = drupal_get_path('module', 'islandora_pdf') . '/tests/fixtures/test.txt';
+<<<<<<< HEAD
+=======
     $handle = fopen($file, "r");
     $contents = fread($handle, filesize($file));
     fclose($handle);
+>>>>>>> df8eb5fea744dfce8d31aecc077502664fe3c5b3
     $edit = array(
       'files[file]' => $file,
       'islandora_pdf_text_upload' => TRUE,
@@ -85,7 +91,11 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
     $path = $this->url;
     $pdfpath = $path . '/datastream/OBJ/view';
     $this->assertLinkByHref($pdfpath, 0, 'PDF PREVIEW datastream found on view page', 'Islandora');
+<<<<<<< HEAD
+    $this->assertRaw('/datastream/OBJ/download', 0, 'PDF download link found on view page', 'Islandora');
+=======
     $this->assertRaw('/datastream/OBJ/download', 'PDF download link found on view page', 'Islandora');
+>>>>>>> df8eb5fea744dfce8d31aecc077502664fe3c5b3
 
     // Determines whether or not the appropriate datastreams were created.
     $object = $this->getObjectFromPath($this->url);
@@ -99,6 +109,14 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
     );
     $this->assertDatastreams($object, $datastreams);
 
+<<<<<<< HEAD
+    // Checks the FULL_TEXT datastream for correct text.
+    $this->drupalGet('islandora/object/' . $object . '/datastream/FULL_TEXT/view');
+    $this->assertText('Misthallery, Gressenheller, Folsense, Akbadain', 'Text from tests/fixtures/test.txt found in the FULL_TEXT datastream', 'Islandora');
+
+    // Attempts to delete the object and then collection.
+    $this->deleteObject($object, 'New Object');
+=======
     // Determines whether or not the image datastreams are valid.
     $datastreams = array(
       'TN',
@@ -141,6 +159,7 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
 
     // Attempts to delete the object and then collection.
     $this->deleteObject($object);
+>>>>>>> df8eb5fea744dfce8d31aecc077502664fe3c5b3
     $this->deleteTestCollection($collectionpid);
   }
 }

@@ -1,0 +1,117 @@
+<?php
+
+/**
+ * @file
+ * Attempts to ingest a batch of PDFs into a randomly generated PDF collection.
+ */
+
+class IslandoraPdfBatchIngestTestCase extends IslandoraCollectionWebTestCase {
+
+  /**
+   * Get test information.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'PDF Batch Ingest/Purge',
+      'description' => 'Ingests and purges a batch of PDFs from a randomly generated PDF collection',
+      'group' => 'Islandora PDF',
+    );
+  }
+
+  /**
+   * Set up the test environment.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    $this->imagemagick_convert = variable_get('imagemagick_convert');
+    parent::setUp(array(
+      'islandora',
+      'islandora_pdf',
+      'islandora_basic_collection',
+      'islandora_batch',
+      'islandora_importer',
+      'zip_importer',
+      'imagemagick',
+    ));
+  }
+
+  /**
+   * Attempts to ingest and purge a batch of PDFs into a random collection.
+   */
+  public function testIngestPurgeBatchPdf() {
+
+    // Sets up the testing space.
+    $user = $this->drupalCreateUser(array(
+      'view fedora repository objects',
+      'ingest fedora objects',
+      'administer site configuration',
+      'manage object properties',
+      'delete fedora objects and datastreams',
+      'create child collection',
+    ));
+    $this->drupalLogin($user);
+    $label = $this->randomName(16);
+    $suffix = $this->randomName(16);
+    $collectionpid = 'islandora:' . $suffix;
+    $this->createTestCollection($label, 'islandora:sp_pdf', $collectionpid);
+    $edit = array(
+      'image_toolkit' => 'imagemagick',
+    );
+    $this->drupalPost('admin/config/media/image-toolkit', $edit, 'Save configuration');
+    $edit = array(
+      'imagemagick_convert' => $this->imagemagick_convert,
+    );
+    $this->drupalPost('admin/config/media/image-toolkit', $edit, 'Save configuration');
+
+    // Ensures derivative creation is all turned on.
+    $path = 'admin/islandora/pdf';
+    $edit = array(
+      'islandora_pdf_create_fulltext' => TRUE,
+    );
+    $this->drupalPost($path, $edit, t('Save configuration'));
+
+    // Attempts to ingest a batch of objects.
+    $path = 'islandora/object/' . $collectionpid . '/manage/collection/batch_import';
+    $file = drupal_get_path('module', 'islandora_pdf') . '/tests/fixtures/test.zip';
+    $edit = array('importer' => 'zip_importer');
+    $this->drupalPost($path, $edit, t('Submit'));
+    $edit = array(
+      'files[file]' => $file,
+      'content_model[islandora:sp_pdf]' => TRUE,
+    );
+    $this->drupalPost(NULL, $edit, t('Import'));
+
+    // Checks for object creation.
+    $path = 'islandora/object/' . $collectionpid;
+    $this->drupalGet($path);
+    $this->assertLink('Aristotle - Poetics', 0, t("PDF object 'Aristotle - Poetics' created"), t('Islandora'));
+    $this->assertLink('Dickens - A Christmas Carol', 0, t("PDF object 'Dickens - A Christmas Carol' created"), t('Islandora'));
+    $this->assertLink('Essays of Francis Bacon', 0, t("PDF object 'Essays of Francis Bacon' created"), t('Islandora'));
+    $this->assertLink('Horace - The Works Of Horace', 0, t("PDF object 'Horace - The Works Of Horace' created"), t('Islandora'));
+    $this->assertLink('Oliphant - Jeanne d\'Arc', 0, t("PDF object 'Oliphant - Jeanne d'Arc' created"), t('Islandora'));
+
+    // Checks Aristotle - Poetics for link and derivative creation.
+    $this->clickLink('Aristotle - Poetics');
+    $objectpid = arg(5, $this->url);
+    $path = $this->url;
+    $pdfpath = $path . '/datastream/OBJ/view';
+    $this->assertLinkByHref($pdfpath, 0, t('PDF PREVIEW link found on view page'), t('Islandora'));
+    $downloadpath = '/datastream/OBJ/download';
+    $this->assertRaw($downloadpath, 0, t('PDF download link found on view page'), t('Islandora'));
+    $this->drupalGet($path . '/manage/datastreams');
+    $this->assertText(t('Fedora Object to Object Relationship Metadata.'), 'RELS-EXT datastream created.', 'Islandora');
+    $this->assertText(t('MODS Record'), 'MODS datastream created.', 'Islandora');
+    $this->assertText(t('DC Record'), 'Dublin Core datastream created.', 'Islandora');
+    $this->assertText(t('OBJ datastream'), 'OBJ datastream created', 'Islandora');
+    $this->assertText(t('TN'), 'TN datastream created', 'Islandora');
+    $this->assertText(t('PREVIEW'), 'PREVIEW datastream created', 'Islandora');
+    $this->assertText(t('FULL_TEXT'), 'FULL_TEXT datastream created', 'Islandora');
+
+    // Deletes the collection and checks for deletion confirmation.
+    $this->deleteTestCollection($collectionpid);
+  }
+
+}

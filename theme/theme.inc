@@ -6,12 +6,13 @@
  */
 
 /**
- * Function preprocess_islandora_pdf.
+ * Prepares variables for islandora-pdf templates.
  *
- * @global type $base_url
+ * Default template: islandora-pdf.tpl.php.
  *
  * @param array $variables
- *   an array of variables that will be passed to the theme function
+ *   An associative array containing:
+ *   - islandora_object: An AbstractObject from Islandora.
  */
 function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   drupal_add_js('misc/form.js');
@@ -35,7 +36,6 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   $variables['islandora_object_label'] = $islandora_object->label;
   $variables['theme_hook_suggestions'][] = 'islandora_pdf__' . str_replace(':', '_', $islandora_object->id);
   $variables['parent_collections'] = islandora_get_parents_from_rels_ext($islandora_object);
-  global $base_url;
   // Full size URL.
   if (isset($islandora_object['OBJ']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $islandora_object['OBJ'])) {
     $full_size_url = url("islandora/object/{$islandora_object->id}/datastream/OBJ/view", array('absolute' => TRUE));

@@ -33,10 +33,7 @@ function islandora_pdf_create_all_derivatives(AbstractObject $object) {
 }
 
 /**
- * Funtion get_derivative_source_as_unmanged_file.
- *
- * Gets the source of all derivatives as an unmanaged file, deletion of the file
- * is left to the caller.
+ * Gets the source of all derivatives as an unmanaged file.
  *
  * @param AbstractObject $object
  *   The object to generate/add the deriviative datastreams to.
@@ -142,7 +139,7 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $file_uri)
  *   The URI to the pdf file the derivative will be generated from.
  * @param string $dsid
  *   The datastream ID to use for the derived datastream.
- * @param is_int() $width
+ * @param int $width
  *   The width to make the derived datastream.
  * @param int $height
  *   The height to make the derived datastream.
@@ -213,10 +210,7 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
 }
 
 /**
- * Function add_datastream.
- *
- * Adds the given file as a datastream to the given object using the given
- * datastream id to identify it.
+ * Adds the given file as a datastream to the given object.
  *
  * @param AbstractObject $object
  *   The object to add the datasteam to.

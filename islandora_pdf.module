@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Handles the creation/display of islandora:sp-pdf objects.
@@ -32,32 +33,7 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
       'pattern' => 'islandora_pdf__',
       'variables' => array('islandora_object' => NULL),
     ),
-    'islandora_default_print' => array(
-      'template' => 'theme/islandora-object-img-print',
-      'variables' => array('islandora_content' => NULL),
-    ),
   );
-}
-
-/**
- * Implements hook_islandora_view_print_object().
- */
-function islandora_pdf_islandora_view_print_object($object) {
-  $output = array();
-  if (in_array('islandora:sp_pdf', $object->models)) {
-    $dsid = isset($obj['HQ_JPG']) ? 'HQ_JPG' : 'PREVIEW';
-    $resource_url = url("islandora/object/{$object->id}/datastream/{$dsid}/view");
-    $params = array(
-      'title' => $object->label,
-      'path' => $resource_url,
-    );
-    // Theme the image seperatly.
-    $variables['islandora_img'] = theme('image', $params);
-    $output = theme('islandora_default_print', array(
-        'islandora_content' => $variables['islandora_img']));
-  }
-
-  return $output;
 }
 
 /**

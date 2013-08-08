@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Handles the uploading of the PDF file as part of the ingest process.
  */
 
@@ -13,7 +12,8 @@
  *   The drupal form.
  * @param array $form_state
  *   The drupal form state.
- * @return
+ *
+ * @return array
  *   The drupal form definition.
  */
 function islandora_pdf_pdf_upload_form(array $form, array &$form_state) {
@@ -29,8 +29,9 @@ function islandora_pdf_pdf_upload_form(array $form, array &$form_state) {
     '#upload_location' => 'temporary://',
     '#upload_validators' => array(
       'file_validate_extensions' => $extensions,
-      'file_validate_size' => array($upload_size * 1024 * 1024), // Assume its specified in MB
-    )
+      // Assume it's specified in MB.
+      'file_validate_size' => array($upload_size * 1024 * 1024),
+    ),
   );
 
   if (variable_get('islandora_pdf_allow_text_upload', FALSE)) {
@@ -48,13 +49,14 @@ function islandora_pdf_pdf_upload_form(array $form, array &$form_state) {
       '#upload_location' => 'temporary://',
       '#upload_validators' => array(
         'file_validate_extensions' => array('txt'),
-        'file_validate_size' => array($upload_size * 1024 * 1024), // Assume its specified in MB
+        // Assume it's specified in MB.
+        'file_validate_size' => array($upload_size * 1024 * 1024),
       ),
       '#states' => array(
         'visible' => array(
           ':input[name="islandora_pdf_text_upload"]' => array('checked' => TRUE),
         ),
-      )
+      ),
     );
   }
   return $form;

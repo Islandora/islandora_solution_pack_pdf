@@ -177,8 +177,11 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
           'success' => TRUE,
           'messages' => array(
             array(
-              'message' => t('Created JPG derivative for @dsid.'),
-              'message_sub' => array('@dsid' => $dsid),
+              'message' => t('Created JPG derivative for @dsid (@pid).'),
+              'message_sub' => array(
+                '@dsid' => $dsid,
+                '@pid' => $object->id,
+              ),
               'type' => 'dsm',
             ),
           ),

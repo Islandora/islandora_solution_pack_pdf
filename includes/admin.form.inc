@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file contains all admin functions
+ * This file contains all admin functions.
  */
 
 /**
@@ -23,8 +23,10 @@ function islandora_pdf_admin($form, &$form_state) {
     $confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> '
         . t('Unable to find pdftotext executable at !url', array('!url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"));
   }
+
   $form = array();
-  // Ajax wrapper for url checking.
+
+  // AJAX wrapper for url checking.
   $form['islandora_pdf_url_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('TEXT'),
@@ -41,11 +43,10 @@ function islandora_pdf_admin($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t("Extract text streams from PDFs using pdftotext"),
     '#description' => t("Extracted text streams are appended to PDFs as FULL_TEXT datastreams and are indexed into Solr. Uploading a text file takes priority over text stream extraction.
-                         </br><strong>Note:</strong> PDFs that contain visible text do not necessarily contain text streams (e.g., images scanned and saved as PDFs). Consider converting text-filled images with no text streams to TIFFs and using the !book with !ocr enabled.", array(
-                           '!book' => l(t('Book Solution Pack'), 'https://wiki.duraspace.org/display/ISLANDORA711/Book+Solution+Pack'),
-                           '!ocr' => l(t('OCR'), 'https://wiki.duraspace.org/display/ISLANDORA711/Islandora+OCR'),
-                         )
-    ),
+                           </br><strong>Note:</strong> PDFs that contain visible text do not necessarily contain text streams (e.g. images scanned and saved as PDFs). Consider converting text-filled images with no text streams to TIFFs and using the !book with !ocr enabled.", array(
+                             '!book' => l(t('Book Solution Pack'), 'https://wiki.duraspace.org/display/ISLANDORA711/Book+Solution+Pack'),
+                             '!ocr' => l(t('OCR'), 'https://wiki.duraspace.org/display/ISLANDORA711/Islandora+OCR'),
+                           )),
     '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE),
   );
 
@@ -147,7 +148,7 @@ function islandora_pdf_admin_validate($form, &$form_state) {
 }
 
 /**
- * PDF to TEXT submit handler.
+ * Function updates PDF to text URL div.
  */
 function islandora_update_pdftotext_url_div($form, $form_state) {
   unset($form_state['submit_handlers']);

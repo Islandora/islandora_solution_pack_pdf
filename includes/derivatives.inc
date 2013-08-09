@@ -107,8 +107,11 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
           'success' => FALSE,
           'messages' => array(
             array(
-              'message' => t('Failed to create FULL_TEXT derivative for @pid.'),
-              'message_sub' => array('@pid' => $object->id),
+              'message' => t('Failed to create FULL_TEXT derivative for @pid. Error message: @error'),
+              'message_sub' => array(
+                '@pid' => $object->id,
+                '@error' => $success,
+              ),
               'type' => 'watchdog',
               'severity' => WATCHDOG_ERROR,
             ),
@@ -192,10 +195,11 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
           'success' => FALSE,
           'messages' => array(
             array(
-              'message' => t('Failed to create JPG derivative for @dsid (@pid).'),
+              'message' => t('Failed to create JPG derivative for @dsid (@pid). Error message: @message'),
               'message_sub' => array(
                 '@dsid' => $dsid,
                 '@pid' => $object->id,
+                '@message' => $success,
               ),
               'type' => 'watchdog',
               'severity' => WATCHDOG_ERROR,

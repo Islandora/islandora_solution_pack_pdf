@@ -90,14 +90,6 @@ function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_num
 }
 
 /**
- * Implements hook_CMODEL_PID_islandora_object_ingested().
- */
-function islandora_pdf_islandora_sp_pdf_islandora_object_ingested($object) {
-  module_load_include('inc', 'islandora_pdf', 'includes/derivatives');
-  islandora_pdf_create_all_derivatives($object);
-}
-
-/**
  * Implements hook_islandora_xml_form_builder_forms().
  */
 function islandora_pdf_islandora_xml_form_builder_forms() {
@@ -138,4 +130,41 @@ function islandora_pdf_islandora_sp_pdf_islandora_ingest_steps() {
       'file' => 'includes/pdf_upload.form.inc',
     ),
   );
+}
+
+/**
+ * Implements hook_CMODEL_PID_islandora_derivative().
+ */
+function islandora_pdf_islandora_sp_pdf_islandora_derivative() {
+  $derivatives = array();
+  $derivatives[] = array(
+    'source_dsid' => 'OBJ',
+    'destination_dsid' => 'TN',
+    'weight' => '0',
+    'function' => array(
+      'islandora_pdf_add_tn_derivative',
+    ),
+    'file' => drupal_get_path('module', 'islandora_pdf') . '/includes/derivatives.inc',
+  );
+  $derivatives[] = array(
+    'source_dsid' => 'OBJ',
+    'destination_dsid' => 'PREVIEW',
+    'weight' => '1',
+    'function' => array(
+      'islandora_pdf_add_preview_derivative',
+    ),
+    'file' => drupal_get_path('module', 'islandora_pdf') . '/includes/derivatives.inc',
+  );
+  if (variable_get('islandora_pdf_create_fulltext', FALSE)) {
+    $derivatives[] = array(
+      'source_dsid' => 'OBJ',
+      'destination_dsid' => 'FULL_TEXT',
+      'weight' => '2',
+      'function' => array(
+        'islandora_pdf_add_fulltext_derivative',
+      ),
+      'file' => drupal_get_path('module', 'islandora_pdf') . '/includes/derivatives.inc',
+    );
+  }
+  return $derivatives;
 }

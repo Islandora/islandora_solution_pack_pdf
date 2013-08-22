@@ -65,7 +65,7 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
     $dsid = "FULL_TEXT";
     $source = $source = drupal_realpath($file_uri);
     $executable = variable_get('islandora_pdf_path_to_pdftotext', '/usr/bin/pdftotext');
-    $temp = drupal_tempnam("temporary://", "fulltext") . '.txt';
+    $temp = file_create_filename('fulltext.txt', 'temporary://');
     $derivative_file_uri = drupal_realpath($temp);
     $command = "$executable $source $derivative_file_uri";
     exec($command, $execout, $returncode);
@@ -235,8 +235,8 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
   $source = drupal_realpath($file_uri) . '[0]';
   $matches = array();
   // Get the base name of the source file.
-  preg_match("/\/([^.]*).*$/", $source, $matches);
-  $temp = drupal_tempnam("temporary://", "{$matches[1]}.$dsid.jpg");
+  $base = pathinfo($source, PATHINFO_FILENAME);
+  $temp = file_create_filename("$base.$dsid.jpg", 'temporary://');
   $dest = drupal_realpath($temp);
   $args['quality'] = '-quality ' . escapeshellarg(variable_get('imagemagick_quality', 75));
   $args['previewsize'] = '-resize ' . escapeshellarg("{$width}x{$height}");

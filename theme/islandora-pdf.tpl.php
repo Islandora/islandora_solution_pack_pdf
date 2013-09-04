@@ -8,7 +8,7 @@
  */
 ?>
 
-<div class="islandora-pdf-object islandora" vocab="http://schema.org" prefix="dcterms: http://purl.org/dc/terms/" typeof="http://schema.org/Article">
+<div class="islandora-pdf-object islandora" vocab="http://schema.org/" prefix="dcterms: http://purl.org/dc/terms/" typeof="Article">
   <div class="islandora-pdf-content-wrapper clearfix">
     <?php if (isset($islandora_content)): ?>
       <div class="islandora-pdf-content">

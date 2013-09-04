@@ -20,8 +20,10 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   module_load_include('inc', 'islandora', 'includes/utilities');
 
   try {
-    $dc = $islandora_object['DC']->content;
-    $dc_object = DublinCore::importFromXMLString($dc);
+    if (isset($islandora_object['DC']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
+      $dc = $islandora_object['DC']->content;
+      $dc_object = DublinCore::importFromXMLString($dc);
+    }
   } catch (Exception $e) {
     drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
   }
@@ -34,7 +36,6 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
 
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   $viewer = islandora_get_viewer(array(), 'islandora_pdf_viewers', $islandora_object);
-  dsm($viewer, 'viewer');
 
   if($viewer) {
     $variables['islandora_content'] = $viewer;

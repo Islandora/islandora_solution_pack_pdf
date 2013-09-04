@@ -6,10 +6,13 @@
  */
 
 /**
+ * Prepares variables for islandora-pdf templates.
  *
- * @global type $base_url
+ * Default template: islandora-pdf.tpl.php.
+ *
  * @param array $variables
- *   an array of variables that will be passed to the theme function
+ *   An associative array containing:
+ *   - islandora_object: An AbstractObject from Islandora.
  */
 function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   drupal_add_js('misc/form.js');
@@ -20,11 +23,12 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   module_load_include('inc', 'islandora', 'includes/utilities');
 
   try {
-    if (isset($islandora_object['DC']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
+    if (isset($islandora_object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
       $dc = $islandora_object['DC']->content;
       $dc_object = DublinCore::importFromXMLString($dc);
     }
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
     drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
   }
   $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
@@ -68,5 +72,6 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
       $download_text = t("Download pdf");
       $variables['islandora_download_link'] = l($download_text, $download_url, array('attributes' => array('class' => array('islandora-pdf-link'))));
     }
+
   }
 }

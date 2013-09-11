@@ -7,3 +7,4 @@ core = 7.x
 version = 7.x-dev
 configure = admin/islandora/pdf
 stylesheets[all][] = css/islandora_pdf.theme.css
+files[] = tests/islandora_pdf_ingest_purge.test

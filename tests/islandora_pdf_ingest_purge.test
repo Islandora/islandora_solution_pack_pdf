@@ -101,10 +101,16 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
 
     // Determines whether or not the image datastreams are valid.
     $datastreams = array(
-      'TN',
-      'PREVIEW',
+      array('OBJ', 'pdf'),
+      array(
+        'FULL_TEXT',
+        'text',
+        array('Misthallery, Gressenheller, Folsense, Akbadain', 1),
+      ),
+      array('TN', 'image'),
+      array('PREVIEW', 'image'),
     );
-    $this->assertImageDatastreams($object, $datastreams);
+    $this->validateDatastreams($object, $datastreams);
 
     // Checks for a fully-black PREVIEW datastream. This is a check for a known
     // issue (hopefully fixed) with some PDF files where ImageMagick creates
@@ -120,23 +126,6 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
       if (intval($preview_scan_data, 16) === 0) {
         $this->fail('PREVIEW datastream is a completely black JPEG image', 'Islandora');
       }
-    }
-
-    // Determines whether or not the PDF datastream is valid.
-    if (isset($object['OBJ'])) {
-      $pdf = $object['OBJ']->content;
-      $this->assertTrue($pdf === $contents, 'OBJ datastream matches originally-ingested content', 'Islandora');
-      $pdf_version = substr($pdf, 5, 3);
-      $this->assertTrue(substr($pdf, 0, 5) == '%PDF-', "OBJ datastream asserts that it is a valid PDF file using PDF version {$pdf_version}", 'Islandora');
-      $pdf_streams = substr_count(bin2hex($pdf), '0a73747265616d0a');
-      $this->assertTrue($pdf_streams, "OBJ datastream reports the existence of {$pdf_streams} PDF streams. An extremely low number could still indicate corruption.", 'Islandora');
-      $this->assertTrue(strpos(bin2hex($pdf), '0a2525454f460a'), 'OBJ datastream reports the existence of the closing \'EOF\' tag required at the end of PDFs', 'Islandora');
-    }
-
-    // Checks the FULL_TEXT datastream for correct text.
-    if (isset($object['FULL_TEXT'])) {
-      $this->drupalGet('islandora/object/' . $object . '/datastream/FULL_TEXT/view');
-      $this->assertText('Misthallery, Gressenheller, Folsense, Akbadain', 'Text from tests/fixtures/test.txt found in the FULL_TEXT datastream', 'Islandora');
     }
 
     // Attempts to delete the object and then collection.

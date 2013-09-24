@@ -21,7 +21,10 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   $repository = $islandora_object->repository;
   module_load_include('inc', 'islandora', 'includes/datastream');
   module_load_include('inc', 'islandora', 'includes/utilities');
+  module_load_include('inc', 'islandora', 'includes/metadata');
 
+  // We should eventually remove the DC object and dc_array code as it only
+  // exists to not break legacy implementations.
   try {
     if (isset($islandora_object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
       $dc = $islandora_object['DC']->content;
@@ -36,6 +39,9 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   $variables['islandora_object_label'] = $islandora_object->label;
   $variables['theme_hook_suggestions'][] = 'islandora_pdf__' . str_replace(':', '_', $islandora_object->id);
   $variables['parent_collections'] = islandora_get_parents_from_rels_ext($islandora_object);
+  $variables['metadata'] = islandora_retrieve_metadata_markup($islandora_object);
+  $variables['description'] = islandora_retrieve_description_markup($islandora_object);
+
   global $base_url;
 
   module_load_include('inc', 'islandora', 'includes/solution_packs');

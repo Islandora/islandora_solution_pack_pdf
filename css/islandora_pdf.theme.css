@@ -1,4 +1,4 @@
-/* 
+/*
     Document   : islandora_basic_collection.theme
     Created on : May 23, 2012, 11:23:56 AM
     Description: The basic pdf page is a simple flexible layout page
@@ -28,8 +28,13 @@
   clear: both;
 }
 
+/* This is kept for legacy reasons */
 dl.islandora-pdf-fields {
   width:100%;
+}
+
+dl.islandora-metadata-fields {
+    width:100%;
 }
 
 .islandora-pdf-metadata dt {
@@ -75,5 +80,5 @@ body.two-sidebars .islandora-pdf-sidebar {
     width: 35%;
     clear: none;
   }
-  
+
 }

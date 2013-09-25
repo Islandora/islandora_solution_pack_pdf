@@ -90,6 +90,9 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
       );
     }
     else {
+      // Before we add this datastream let's rip out non valid XML characters.
+      $full_text = file_get_contents($derivative_file_uri);
+      file_put_contents($derivative_file_uri, preg_replace('/[^\x09\x0A\x0D\x20-\xFF]/u', '', $full_text));
       $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
       if ($success === TRUE) {
         return array(

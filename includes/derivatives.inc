@@ -58,7 +58,7 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
  */
 function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = FALSE) {
   module_load_include('inc', 'islandora', 'includes/utilities');
-  if (!isset($object['FULL_TEXT']) || (isset($object['FULL-_EXT']) && $force === TRUE)) {
+  if (!isset($object['FULL_TEXT']) || (isset($object['FULL_TEXT']) && $force === TRUE)) {
     if (!isset($object['OBJ'])) {
       return islandora_pdf_missing_obj_datastream($object->id);
     }

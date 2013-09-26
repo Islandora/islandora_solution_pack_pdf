@@ -57,7 +57,8 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = FALSE) {
-  if (!isset($object['FULL_TEXT']) || (isset($object['FULL-_EXT']) && $force === TRUE)) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  if (!isset($object['FULL_TEXT']) || (isset($object['FULL_TEXT']) && $force === TRUE)) {
     if (!isset($object['OBJ'])) {
       return islandora_pdf_missing_obj_datastream($object->id);
     }
@@ -90,6 +91,10 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
       );
     }
     else {
+      // Before we add this datastream let's rip out non valid XML characters.
+      $full_text = file_get_contents($derivative_file_uri);
+      $sanitized_full_text = islandora_sanitize_input_for_valid_xml($full_text);
+      file_put_contents($derivative_file_uri, $sanitized_full_text);
       $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
       if ($success === TRUE) {
         return array(

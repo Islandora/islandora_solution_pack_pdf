@@ -26,7 +26,7 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
    * @see IslandoraWebTestCase::setUp()
    */
   public function setUp() {
-    $this->imagemagick_convert = variable_get('imagemagick_convert');
+    $this->imagemagick_convert = variable_get('imagemagick_convert', '/usr/bin/convert');
     parent::setUp(array(
       'islandora',
       'islandora_pdf',

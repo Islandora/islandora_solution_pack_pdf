@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="islandora_solution_pack_pdf" default="build">
-  <target name="build" depends="clean,prepare,lint,phploc,code_sniff,phpcpd,pdepend,doxygen,phpcb" />
+  <target name="build" depends="clean,prepare,php-eval,lint,phploc,code_sniff,phpcpd,pdepend,doxygen,phpcb,test,cc-process,cc-export" />
 
   <target name="clean" description="Cleanup build artifacts">
       <delete dir="${basedir}/build/test" />
@@ -9,6 +9,7 @@
       <delete dir="${basedir}/build/pdepend" />
       <delete dir="${basedir}/build/api" />
       <delete dir="${basedir}/build/code-browser" />
+      <delete dir="${basedir}/build/code_coverage" />
   </target>
 
   <target name="prepare" description="Prepares workspace for artifacts" >
@@ -17,6 +18,13 @@
     <mkdir dir="${basedir}/build/pdepend" />
     <mkdir dir="${basedir}/build/api" />
     <mkdir dir="${basedir}/build/code-browser" />
+    <mkdir dir="${basedir}/build/code_coverage" />
+  </target>
+  
+  <target name="php-eval" description="Use php-eval to set the code_coverage_filter_files variable">
+    <exec executable="drush">
+      <arg line="php-eval &quot;variable_set('code_coverage_files', array('sites/all/modules/islandora_solution_pack_pdf/islandora_pdf.module', 'sites/all/modules/islandora_solution_pack_pdf/islandora_pdf.install', 'sites/all/modules/islandora_solution_pack_pdf/includes/derivatives.inc', 'sites/all/modules/islandora_solution_pack_pdf/includes/pdf_upload.form.inc', 'sites/all/modules/islandora_solution_pack_pdf/includes/admin.form.inc', 'sites/all/modules/islandora_solution_pack_pdf/theme/islandora-pdf.tpl.php', 'sites/all/modules/islandora_solution_pack_pdf/theme/theme.inc')); variable_set('code_coverage_modules', array());&quot;"/>
+    </exec>
   </target>
 
   <target name="lint" description="Perform syntax check of sourcecode files">
@@ -78,7 +86,19 @@
 
   <target name="test">
     <exec executable="drush">
-      <arg line="test-run --xml=${basedir}/build/test 'Islandora Solution Pack PDF'" />
+      <arg line="test-run --uri=http://localhost --xml=${basedir}/build/test 'Islandora PDF'" />
+    </exec>
+  </target>
+  
+  <target name="cc-process" description="Processes the code coverage output so it can be exported">
+    <exec executable="drush">
+      <arg line="cc-process all"/>
+    </exec>
+  </target>
+  
+  <target name="cc-export" description="Generate a code coverage report for the simpletest run">
+    <exec executable="drush">
+      <arg line="cc-export latest --html --csv --tag-html --generate-index --path=${basedir}/build/code_coverage"/>
     </exec>
   </target>
 

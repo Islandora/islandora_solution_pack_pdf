@@ -74,7 +74,7 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
       );
       $variables['islandora_preview_img'] = theme('image', $params);
       $variables['islandora_content'] = l($variables['islandora_preview_img'], $variables['islandora_full_url'], array('html' => TRUE));
-      //sanitize this object name a bit
+      // Sanitize this object name a bit.
       $sanitized_label = preg_replace('/[^A-Za-z0-9_\-]|\.pdf$/', '_', $islandora_object->label);
       $download_url = 'islandora/object/' . $islandora_object->id . '/datastream/OBJ/download/' . $sanitized_label . '.pdf';
       $download_text = t("Download pdf");

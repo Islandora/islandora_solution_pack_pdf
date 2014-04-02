@@ -98,11 +98,5 @@ function islandora_pdf_pdf_upload_form_submit(array $form, array &$form_state) {
     $ds->setContentFromFile($text_path, FALSE);
     $ds->label = $text_file->filename;
     $ds->mimetype = $text_file->filemime;
-    if ($text_file) {
-      file_delete($text_file);
-    }
-  }
-  if ($pdf_file) {
-    file_delete($pdf_file);
   }
 }

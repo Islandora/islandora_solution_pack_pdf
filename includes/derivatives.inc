@@ -328,7 +328,8 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
   catch (exception $e) {
     $return = $e->getMessage();
   }
-  file_unmanaged_delete($file_uri);
+  $file_name_1 = drupal_basename($file_uri);
+  islandora_temp_file_entry($file_name_1, $file_uri);
   return $return;
 }
 

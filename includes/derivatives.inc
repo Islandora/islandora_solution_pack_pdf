@@ -41,7 +41,9 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
   $height = variable_get('islandora_pdf_thumbnail_height', 200);
   $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
   $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height, $force);
-  file_unmanaged_delete($file_uri);
+
+  $file_name = str_replace(':', '-', $object->id);
+  islandora_temp_file_entry($file_name, $file_uri);
   return $results;
 }
 
@@ -73,6 +75,10 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
     $command = "$executable $source $derivative_file_uri";
     exec($command, $execout, $returncode);
     file_unmanaged_delete($file_uri);
+
+    $file_name = drupal_basename($file_uri);
+    islandora_temp_file_entry($file_name, $file_uri);
+
     $success = ($returncode === 0);
 
     if (!$success) {
@@ -127,7 +133,8 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
         );
       }
     }
-    file_unmanaged_delete($temp);
+    $file_name = drupal_basename($derivative_file_uri);
+    islandora_temp_file_entry($file_name, $derivative_file_uri);
     return $success;
   }
 }
@@ -150,7 +157,8 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
   $height = variable_get('islandora_pdf_preview_height', 700);
   $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
   $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force);
-  file_unmanaged_delete($file_uri);
+  $file_name = drupal_basename($file_uri);
+  islandora_temp_file_entry($file_name, $file_uri);
   return $results;
 }
 
@@ -181,11 +189,13 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
       return islandora_pdf_missing_obj_datastream($object->id);
     }
     $derivative_file_uri = islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height);
-    file_unmanaged_delete($file_uri);
+    $file_name = drupal_basename($file_uri);
+    islandora_temp_file_entry($file_name, $file_uri);
     // Receive a valid file URI to add or an error message otherwise.
     if (!is_array($derivative_file_uri) && file_valid_uri($derivative_file_uri)) {
       $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
-      file_unmanaged_delete($derivative_file_uri);
+      $file_name_1 = drupal_basename($derivative_file_uri);
+      islandora_temp_file_entry($file_name_1, $derivative_file_uri);
       if ($success === TRUE) {
         return array(
           'success' => TRUE,

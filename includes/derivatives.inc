@@ -155,9 +155,6 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
   $height = variable_get('islandora_pdf_preview_height', 700);
   $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
 
-  $file_name = drupal_basename($file_uri);
-  islandora_temp_file_entry($file_name, $file_uri);
-
   $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force);
 
   return $results;
@@ -335,7 +332,7 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
     $return = $e->getMessage();
   }
 
-  //islandora_temp_file_delete($file_uri);
+  islandora_temp_file_delete($file_uri);
   return $return;
 }
 

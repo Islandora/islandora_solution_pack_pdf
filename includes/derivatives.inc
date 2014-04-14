@@ -65,18 +65,18 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
       return islandora_pdf_missing_obj_datastream($object->id);
     }
     $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
+
     $dsid = "FULL_TEXT";
     $source = $source = drupal_realpath($file_uri);
     $executable = variable_get('islandora_pdf_path_to_pdftotext', '/usr/bin/pdftotext');
+
     $temp = file_create_filename('fulltext.txt', 'temporary://');
     $derivative_file_uri = drupal_realpath($temp);
+
     $command = "$executable $source $derivative_file_uri";
     exec($command, $execout, $returncode);
     file_unmanaged_delete($file_uri);
 
-    $file_name = drupal_basename($file_uri);
-    islandora_temp_file_entry($file_name, $file_uri);
-    islandora_temp_file_delete($file_uri);
     $success = ($returncode === 0);
 
     if (!$success) {
@@ -131,8 +131,7 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
         );
       }
     }
-    $file_name = drupal_basename($derivative_file_uri);
-    islandora_temp_file_entry($file_name, $derivative_file_uri);
+    islandora_temp_file_delete('temporary://' . $derivative_file_uri);
     return $success;
   }
 }
@@ -151,12 +150,16 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   $width = variable_get('islandora_pdf_preview_width', 500);
   $height = variable_get('islandora_pdf_preview_height', 700);
   $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
-  $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force);
+
   $file_name = drupal_basename($file_uri);
   islandora_temp_file_entry($file_name, $file_uri);
+
+  $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force);
+
   return $results;
 }
 
@@ -182,6 +185,7 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $dsid, $width, $height, $force) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   if (!isset($object[$dsid]) || (isset($object[$dsid]) && $force === TRUE)) {
     if (!isset($object['OBJ'])) {
       return islandora_pdf_missing_obj_datastream($object->id);
@@ -251,6 +255,7 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   $source = drupal_realpath($file_uri) . '[0]';
   $matches = array();
   // Get the base name of the source file.
@@ -308,6 +313,9 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
 function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
   $return = TRUE;
   try {
+    $file_name_1 = drupal_basename($file_uri);
+    islandora_temp_file_entry($file_name_1, $file_uri);
+
     $ingest = !isset($object[$datastream_id]);
     $mime_detector = new MimeDetect();
     if ($ingest) {
@@ -326,8 +334,8 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
   catch (exception $e) {
     $return = $e->getMessage();
   }
-  $file_name_1 = drupal_basename($file_uri);
-  islandora_temp_file_entry($file_name_1, $file_uri);
+
+  //islandora_temp_file_delete($file_uri);
   return $return;
 }
 

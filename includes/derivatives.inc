@@ -42,8 +42,6 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
   $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
   $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height, $force);
 
-  $file_name = str_replace(':', '-', $object->id);
-  islandora_temp_file_entry($file_name, $file_uri);
   return $results;
 }
 
@@ -78,7 +76,7 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
 
     $file_name = drupal_basename($file_uri);
     islandora_temp_file_entry($file_name, $file_uri);
-
+    islandora_temp_file_delete($file_uri);
     $success = ($returncode === 0);
 
     if (!$success) {

@@ -10,9 +10,9 @@
  */
 function islandora_pdf_menu() {
   return array(
-    'admin/islandora/pdf' => array(
-      'title' => 'PDF Collection',
-      'description' => 'Configure the PDF Solution Pack.',
+    'admin/islandora/solution_pack_config/pdf' => array(
+      'title' => 'PDF Solution Pack',
+      'description' => 'Define ingest behavior and configure preview display.',
       'page callback' => 'drupal_get_form',
       'access arguments' => array('administer site configuration'),
       'page arguments' => array('islandora_pdf_admin'),

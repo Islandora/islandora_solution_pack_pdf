@@ -310,8 +310,6 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
 function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
   $return = TRUE;
   try {
-    $file_name_1 = drupal_basename($file_uri);
-
     $ingest = !isset($object[$datastream_id]);
     $mime_detector = new MimeDetect();
     if ($ingest) {

@@ -6,34 +6,24 @@
  */
 
 /**
- * Gets the source of all derivatives as an unmanaged file.
+ * Gets the source of all derivatives as a managed file.
  *
  * @param AbstractObject $object
  *   The object to generate/add the deriviative datastreams to.
  *
- * @return string
- *   The file path to the unmanaged derivative source file.
+ * @return object
+ *   The file object of the managed derivative source file.
  */
-// function islandora_pdf_get_derivative_source_as_manged_file_as_unmanaged_file(AbstractObject $object) {
-//   $mime_detect = new MimeDetect();
-//   $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
-//   $file_name = str_replace(':', '-', $object->id);
-//   $file_uri = file_create_filename("{$file_name}.OBJ.{$ext}", 'temporary://');
-//   $object['OBJ']->getContent($file_uri);
-//   return $file_uri;
-// }
-
 function islandora_pdf_get_derivative_source_as_manged_file(AbstractObject $object) {
   $mime_detect = new MimeDetect();
   $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
   $file_name = str_replace(':', '-', $object->id);
   $file_uri = file_create_filename("{$file_name}.OBJ.{$ext}", 'temporary://');
-  // Manage temp file.
-
   $object['OBJ']->getContent($file_uri);
   $temp = islandora_temp_file_entry($file_uri);
   return $temp;
 }
+
 /**
  * Creates a JPG deriviative for the TN datastream.
  *

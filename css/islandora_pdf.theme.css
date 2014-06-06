@@ -5,8 +5,8 @@
     that breaks down to two columns when 2 sidebars are visible
 */
 
-.islandora-pdf-link {
-
+a.islandora-pdf-link {
+  margin-left: 5px;
 }
 
 .islandora-pdf-content {
@@ -16,6 +16,9 @@
   -moz-border-radius: 5px;
   border-radius: 5px;
   padding: 15px;
+  float: left;
+  width: auto;
+  max-width: 100%;
 }
 
 .islandora-pdf-content img {
@@ -65,11 +68,6 @@ body.two-sidebars .islandora-pdf-sidebar {
 }
 
 @media all and (min-width: 768px) {
-
-  body.no-sidebars .islandora-pdf-content {
-    width: 65%;
-    float: left; /* LTR */
-  }
 
   body.no-sidebars .islandora-pdf-sidebar {
     padding-left: 20px;

@@ -26,3 +26,5 @@ script:
   - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_pdf
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_solution_pack_pdf
   - drush test-run --uri=http://localhost:8081 "Islandora PDF"
+notifications:
+  irc: "irc.freenode.org#islandora"

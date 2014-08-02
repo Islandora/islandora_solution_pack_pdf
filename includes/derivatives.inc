@@ -333,7 +333,7 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
  *
  * @see hook_islandora_derivative()
  */
-function islandora_pdf_no_obj_datastream($pid) {
+function islandora_pdf_missing_obj_datastream($pid) {
   return array(
     'success' => FALSE,
     'messages' => array(

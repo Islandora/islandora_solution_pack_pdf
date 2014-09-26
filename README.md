@@ -11,7 +11,7 @@ This module requires the following modules/libraries:
 * [Islandora](https://github.com/islandora/islandora)
 * [Tuque](https://github.com/islandora/tuque)
 * [ImageMagick](http://www.imagemagick.org/script/index.php) - Debian/Ubuntu `sudo apt-get install imagemagick`
-* pdftotext -  Debian/Ubuntu `sudo apt-get install pdftotext`
+* [pdftotext](http://poppler.freedesktop.org) -  Debian/Ubuntu `sudo apt-get install poppler-utils`
 
 ## Installation
 

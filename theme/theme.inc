@@ -31,7 +31,7 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
       $dc_object = DublinCore::importFromXMLString($dc);
     }
   }
-  catch(Exception$e) {
+  catch (Exception$e) {
     drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
   }
   $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
@@ -82,4 +82,3 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
     }
   }
 }
-

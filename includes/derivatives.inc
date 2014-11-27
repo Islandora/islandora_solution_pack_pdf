@@ -1,8 +1,6 @@
 <?php
 
 /**
- *
- *
  * @file
  * Contains all the functions required for adding derivatives for the PDF SP.
  */
@@ -16,7 +14,7 @@
  * @return string
  *   The file path to the unmanaged derivative source file.
  */
-function islandora_pdf_get_derivative_source_as_unmanaged_file(AbstractObject$object) {
+function islandora_pdf_get_derivative_source_as_unmanaged_file(AbstractObject $object) {
   $mime_detect = new MimeDetect();
   $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
   $file_name = str_replace(':', '-', $object->id);
@@ -38,7 +36,7 @@ function islandora_pdf_get_derivative_source_as_unmanaged_file(AbstractObject$ob
  *
  * @see hook_islandora_derivative()
  */
-function islandora_pdf_add_tn_derivative(AbstractObject$object, $force = FALSE) {
+function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE) {
   $width = variable_get('islandora_pdf_thumbnail_width', 200);
   $height = variable_get('islandora_pdf_thumbnail_height', 200);
   $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
@@ -60,7 +58,7 @@ function islandora_pdf_add_tn_derivative(AbstractObject$object, $force = FALSE) 
  *
  * @see hook_islandora_derivative()
  */
-function islandora_pdf_add_fulltext_derivative(AbstractObject$object, $force = FALSE) {
+function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = FALSE) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   if (!isset($object['FULL_TEXT']) || (isset($object['FULL_TEXT']) && $force === TRUE)) {
     if (!isset($object['OBJ'])) {
@@ -134,6 +132,9 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject$object, $force = F
   }
 }
 
+/**
+ * Creates a PDFA archival derivative and datastream.
+ */
 function islandora_pdf_add_pdfa_derivative(AbstractObject$object, $force = FALSE) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   if (!isset($object['OBJ'])) {
@@ -215,7 +216,7 @@ function islandora_pdf_add_pdfa_derivative(AbstractObject$object, $force = FALSE
  *
  * @see hook_islandora_derivative()
  */
-function islandora_pdf_add_preview_derivative(AbstractObject$object, $force = FALSE) {
+function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = FALSE) {
   $width = variable_get('islandora_pdf_preview_width', 500);
   $height = variable_get('islandora_pdf_preview_height', 700);
   $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
@@ -245,7 +246,7 @@ function islandora_pdf_add_preview_derivative(AbstractObject$object, $force = FA
  *
  * @see hook_islandora_derivative()
  */
-function islandora_pdf_add_jpg_derivative(AbstractObject$object, $file_uri, $dsid, $width, $height, $force) {
+function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $dsid, $width, $height, $force) {
   if (!isset($object[$dsid]) || (isset($object[$dsid]) && $force === TRUE)) {
     if (!isset($object['OBJ'])) {
       return islandora_pdf_missing_obj_datastream($object->id);
@@ -385,7 +386,7 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
       $object->ingestDatastream($ds);
     }
   }
-  catch(exception$e) {
+  catch (exception$e) {
     $return = $e->getMessage();
   }
   file_unmanaged_delete($file_uri);
@@ -416,4 +417,3 @@ function islandora_pdf_missing_obj_datastream($pid) {
     ),
   );
 }
-

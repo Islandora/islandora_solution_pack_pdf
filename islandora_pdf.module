@@ -1,8 +1,6 @@
 <?php
 
 /**
- *
- *
  * @file
  * Handles the creation/display of islandora:sp-pdf objects.
  */
@@ -41,7 +39,7 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_islandora_required_objects().
  */
-function islandora_pdf_islandora_required_objects(IslandoraTuque$connection) {
+function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_pdf');
   // PDF Content Model.
   $pdf_content_model = $connection->repository->constructObject('islandora:sp_pdf');
@@ -181,4 +179,3 @@ function islandora_pdf_islandora_sp_pdf_islandora_derivative() {
   }
   return $derivatives;
 }
-

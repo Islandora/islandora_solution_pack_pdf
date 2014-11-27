@@ -16,7 +16,7 @@
  * @return array
  *   The drupal form definition.
  */
-function islandora_pdf_pdf_upload_form(array$form, array & $form_state) {
+function islandora_pdf_pdf_upload_form(array $form, array & $form_state) {
   $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
   $extensions = array('pdf');
   $form = array();
@@ -70,7 +70,7 @@ function islandora_pdf_pdf_upload_form(array$form, array & $form_state) {
  * @param array $form_state
  *   The drupal form state.
  */
-function islandora_pdf_pdf_upload_form_submit(array$form, array & $form_state) {
+function islandora_pdf_pdf_upload_form_submit(array $form, array & $form_state) {
   $object = $form_state['islandora']['objects'][0];
   if (empty($object['OBJ'])) {
     $ds = $object->constructDatastream('OBJ', 'M');
@@ -100,4 +100,3 @@ function islandora_pdf_pdf_upload_form_submit(array$form, array & $form_state) {
     $ds->mimetype = $text_file->filemime;
   }
 }
-

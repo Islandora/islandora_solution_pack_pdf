@@ -135,7 +135,7 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
 /**
  * Creates a PDFA archival derivative and datastream.
  */
-function islandora_pdf_add_pdfa_derivative(AbstractObject$object, $force = FALSE) {
+function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALSE) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   if (!isset($object['OBJ'])) {
     return islandora_pdf_missing_obj_datastream($object->id);

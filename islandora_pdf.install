@@ -22,3 +22,4 @@ function islandora_pdf_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   islandora_install_solution_pack('islandora_pdf', 'uninstall');
 }
+

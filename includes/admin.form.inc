@@ -30,7 +30,7 @@ function islandora_pdf_admin($form, &$form_state) {
   }
   exec($islandora_pdf_path_to_gs, $output, $return_value);
   $gs_confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>' . t('ghostscript executable found at !url', array('!url' => "<strong>$islandora_pdf_path_to_gs</strong>"));
-  if ($return_value != 1) {
+  if ($return_value != 0) {
     $gs_confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> ' . t('Unable to find ghotscript executable at !url', array('!url' => "<strong>$islandora_pdf_path_to_gs</strong>"));
   }
 
@@ -189,8 +189,9 @@ function islandora_pdf_admin_validate($form, &$form_state) {
   }
   if ($form_state['values']['islandora_pdf_create_pdfa']) {
     $islandora_pdf_path_to_gs = $form_state['values']['islandora_pdf_path_to_gs'];
-    exec($islandora_pdf_path_to_gs, $output, $return_value);
-    if ($return_value != 1) {
+    $gs_test_command = $islandora_pdf_path_to_gs . ' --help'
+    exec($gs_test_command, $output, $return_value);
+    if ($return_value != 0) {
       form_set_error('', t('Cannot create PDF/A without ghostscript.'));
     }
   }

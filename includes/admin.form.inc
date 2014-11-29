@@ -28,7 +28,8 @@ function islandora_pdf_admin($form, &$form_state) {
   else {
     $islandora_pdf_path_to_gs = variable_get('islandora_pdf_path_to_gs', '/usr/bin/gs');
   }
-  exec($islandora_pdf_path_to_gs, $output, $return_value);
+  $gs_test_command = $islandora_pdf_path_to_gs . ' --help';
+  exec($gs_test_command, $output, $return_value);
   $gs_confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>' . t('ghostscript executable found at !url', array('!url' => "<strong>$islandora_pdf_path_to_gs</strong>"));
   if ($return_value != 0) {
     $gs_confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> ' . t('Unable to find ghotscript executable at !url', array('!url' => "<strong>$islandora_pdf_path_to_gs</strong>"));

@@ -28,7 +28,7 @@ function islandora_pdf_get_derivative_source_as_unmanaged_file(AbstractObject $o
  *
  * @param AbstractObject $object
  *   The object to add the deriviative datastreams to.
- * @param bool $force
+ * @param bool    $force
  *   Whether the derivative generation is being forced or not.
  *
  * @return array
@@ -50,7 +50,7 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
  *
  * @param AbstractObject $object
  *   The object to add the deriviative datastreams to.
- * @param bool $force
+ * @param bool    $force
  *   Whether the derivative generation is being forced or not.
  *
  * @return array
@@ -133,11 +133,82 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
 }
 
 /**
+ * Creates a PDFA archival derivative and datastream.
+ */
+function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  if (!isset($object['OBJ'])) {
+    return islandora_pdf_missing_obj_datastream($object->id);
+  }
+  $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
+  $dsid = "PDFA";
+  $source = $source = drupal_realpath($file_uri);
+  $executable = variable_get('islandora_pdf_path_to_gs', '/usr/bin/gs');
+  $temp = file_create_filename('pdfa.pdf', 'temporary://');
+  $derivative_file_uri = drupal_realpath($temp);
+  $command = "$executable -dPDFA -dNOOUTERSAVE -dUseCIEColor -sProcessColorModel=DeviceRGB -sDEVICE=pdfwrite -o $derivative_file_uri -dPDFACompatibilityPolicy=1 $source ";
+  exec($command, $execout, $returncode);
+  file_unmanaged_delete($file_uri);
+  $success = ($returncode === 0);
+
+  if (!$success) {
+    $success = array(
+      'success' => FALSE,
+      'messages' => array(
+        array(
+          'message' => t('`%command` returned an error when creating %dsid derivative of PID %pid: %error'),
+          'message_sub' => array(
+            '%command' => $command,
+            '%dsid' => $dsid,
+            '%pid' => $object->id,
+            '%error' => $execout,
+          ),
+          'type' => 'dsm',
+          'severity' => WATCHDOG_ERROR,
+        ),
+      ),
+    );
+  }
+  else {
+    $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
+    if ($success === TRUE) {
+      return array(
+        'success' => TRUE,
+        'messages' => array(
+          array(
+            'message' => t('Created PDFA derivative.'),
+            'type' => 'dsm',
+          ),
+        ),
+      );
+    }
+    else {
+      return array(
+        'success' => FALSE,
+        'messages' => array(
+          array(
+            'message' => t('Failed to create PDFA derivative for @pid. Error message: @error'),
+            'message_sub' => array(
+              '@pid' => $object->id,
+              '@error' => $success,
+            ),
+            'type' => 'watchdog',
+            'severity' => WATCHDOG_ERROR,
+          ),
+        ),
+      );
+    }
+  }
+  file_unmanaged_delete($temp);
+  return $success;
+}
+
+/**
  * Creates a JPG deriviative for the PREVIEW datastream.
  *
  * @param AbstractObject $object
  *   The object to add the deriviative datastreams to.
- * @param bool $force
+ * @param bool    $force
  *   Whether the derivative generation is being forced or not.
  *
  * @return array
@@ -159,15 +230,15 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  *
  * @param AbstractObject $object
  *   The object to add the deriviative datastreams to.
- * @param string $file_uri
+ * @param string  $file_uri
  *   The URI to the PDF file the derivative will be generated from.
- * @param string $dsid
+ * @param string  $dsid
  *   The datastream ID to use for the derived datastream.
- * @param int $width
+ * @param int     $width
  *   The width to make the derived datastream.
- * @param int $height
+ * @param int     $height
  *   The height to make the derived datastream.
- * @param bool $force
+ * @param bool    $force
  *   Whether the derivative generation is being forced or not.
  *
  * @return array
@@ -228,13 +299,13 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
 /**
  * Creates a jpg derivative from the given pdf file.
  *
- * @param string $file_uri
+ * @param string  $file_uri
  *   The URI to the pdf file the derivative will be generated from.
- * @param string $dsid
+ * @param string  $dsid
  *   Used to identify the generated file.
- * @param int $width
+ * @param int     $width
  *   The width to make the derived datastream.
- * @param int $height
+ * @param int     $height
  *   The height to make the derived datastream.
  *
  * @return string|array
@@ -289,9 +360,9 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
  *
  * @param AbstractObject $object
  *   The object to add the datastream to.
- * @param string $datastream_id
+ * @param string  $datastream_id
  *   The datastream id of the added datastream.
- * @param string $file_uri
+ * @param string  $file_uri
  *   A URI to the file containing the content for the datastream.
  *
  * @return bool|string
@@ -315,7 +386,7 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
       $object->ingestDatastream($ds);
     }
   }
-  catch (exception $e) {
+  catch (exception$e) {
     $return = $e->getMessage();
   }
   file_unmanaged_delete($file_uri);
@@ -325,7 +396,7 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
 /**
  * Helper function declaring that no OBJ datastream is present.
  *
- * @param string $pid
+ * @param string  $pid
  *   The pid of the ingested object.
  *
  * @return array

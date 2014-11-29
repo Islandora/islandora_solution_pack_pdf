@@ -21,7 +21,7 @@
   </div>
   <div class="islandora-pdf-metadata">
     <?php print $description; ?>
-    <?php if($parent_collections): ?>
+    <?php if ($parent_collections): ?>
       <div>
         <h2><?php print t('In collections'); ?></h2>
         <ul>
@@ -34,3 +34,4 @@
     <?php print $metadata; ?>
   </div>
 </div>
+

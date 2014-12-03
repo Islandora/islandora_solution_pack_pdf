@@ -15,6 +15,9 @@
   <dsTypeModel ID="OBJ">
     <form MIME="application/pdf"></form>
   </dsTypeModel>
+  <dsTypeModel ID="PDFA">
+    <form MIME="application/pdf"></form>
+  </dsTypeModel>
   <dsTypeModel ID="FULL_TEXT">
     <form MIME="text/plain"></form>
   </dsTypeModel>

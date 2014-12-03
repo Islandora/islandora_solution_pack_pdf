@@ -12,6 +12,7 @@ This module requires the following modules/libraries:
 * [Tuque](https://github.com/islandora/tuque)
 * [ImageMagick](http://www.imagemagick.org/script/index.php) - Debian/Ubuntu `sudo apt-get install imagemagick`
 * [pdftotext](http://poppler.freedesktop.org) -  Debian/Ubuntu `sudo apt-get install poppler-utils`
+* [ghostscript](http://www.ghostscript.com) - Debian/Ubuntu `sudo apt-get install gs`
 
 ## Installation
 
@@ -19,7 +20,7 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 ## Configuration
 
-Configure thumbnail and preview image sizes, and set the path for `pdftotext` if extract text stream is selected in Administration » Islandora » PDF Collection (admin/islandora/pdf).
+Configure thumbnail and preview image sizes, and set the path for `pdftotext` and `gs` if extract text stream and create PDFA derivative are selected, respectively, in Administration » Islandora » PDF Collection (admin/islandora/pdf).
 
 ![Configuration](http://i.imgur.com/h6OwdCT.png)
 

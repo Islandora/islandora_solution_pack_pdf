@@ -23,7 +23,6 @@
   </dsTypeModel>
   <dsTypeModel ID="TN">
     <form MIME="image/jpeg"/>
-    <form MIME="image/jpg"/>
     <form MIME="image/png"/>
     <form MIME="image/gif"/>
   </dsTypeModel>

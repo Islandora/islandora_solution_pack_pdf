@@ -31,18 +31,21 @@ function islandora_pdf_get_derivative_source_as_unmanaged_file(AbstractObject $o
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of the thumbnail creation.
+ * @return array|NULL
+ *   An array describing the outcome of the thumbnail creation or NULL if no
+ *   derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE) {
-  $width = variable_get('islandora_pdf_thumbnail_width', 200);
-  $height = variable_get('islandora_pdf_thumbnail_height', 200);
-  $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
-  $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height, $force);
-  file_unmanaged_delete($file_uri);
-  return $results;
+  if ($force || !isset($object['TN'])) {
+    $width = variable_get('islandora_pdf_thumbnail_width', 200);
+    $height = variable_get('islandora_pdf_thumbnail_height', 200);
+    $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
+    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height, $force);
+    file_unmanaged_delete($file_uri);
+    return $results;
+  }
 }
 
 /**
@@ -53,8 +56,9 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of the FULL_TEXT datastream creation.
+ * @return array|NULL
+ *   An array describing the outcome of the FULL_TEXT datastream creation or
+ *   NULL if no derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */
@@ -211,18 +215,21 @@ function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALS
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of the PREVIEW datastream creation.
+ * @return array|NULL
+ *   An array describing the outcome of the PREVIEW datastream creation or NULL
+ *   if no derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = FALSE) {
-  $width = variable_get('islandora_pdf_preview_width', 500);
-  $height = variable_get('islandora_pdf_preview_height', 700);
-  $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
-  $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force);
-  file_unmanaged_delete($file_uri);
-  return $results;
+  if ($force || !isset($object['PREVIEW'])) {
+    $width = variable_get('islandora_pdf_preview_width', 500);
+    $height = variable_get('islandora_pdf_preview_height', 700);
+    $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
+    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force);
+    file_unmanaged_delete($file_uri);
+    return $results;
+  }
 }
 
 /**
@@ -241,8 +248,9 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of adding the JPG derivative.
+ * @return array|NULL
+ *   An array describing the outcome of adding the JPG derivative or NULL if no
+ *   derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */

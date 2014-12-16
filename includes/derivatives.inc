@@ -31,8 +31,9 @@ function islandora_pdf_get_derivative_source_as_unmanaged_file(AbstractObject $o
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of the thumbnail creation.
+ * @return array|NULL
+ *   An array describing the outcome of the thumbnail creation or NULL if no
+ *   derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */
@@ -55,8 +56,9 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of the FULL_TEXT datastream creation.
+ * @return array|NULL
+ *   An array describing the outcome of the FULL_TEXT datastream creation or
+ *   NULL if no derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */
@@ -142,8 +144,9 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of the PREVIEW datastream creation.
+ * @return array|NULL
+ *   An array describing the outcome of the PREVIEW datastream creation or NULL
+ *   if no derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */
@@ -174,8 +177,9 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of adding the JPG derivative.
+ * @return array|NULL
+ *   An array describing the outcome of adding the JPG derivative or NULL if no
+ *   derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */

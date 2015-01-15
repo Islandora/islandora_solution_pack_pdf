@@ -49,7 +49,7 @@ function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
   // DS-COMPOSITE-MODEL Datastream.
   $datastream = $pdf_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
   $datastream->label = 'DS-COMPOSITE-MODEL';
-  $datastream->mimetype = 'text/xml';
+  $datastream->mimetype = 'application/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_pdf_ds_composite_model.xml", FALSE);
   $pdf_content_model->ingestDatastream($datastream);
   // PDF Collection.
@@ -61,7 +61,7 @@ function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
   // Collection Policy Datastream.
   $datastream = $pdf_collection->constructDatastream('COLLECTION_POLICY', 'X');
   $datastream->label = 'Collection policy';
-  $datastream->mimetype = 'text/xml';
+  $datastream->mimetype = 'application/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_pdf_collection_policy.xml", FALSE);
   $pdf_collection->ingestDatastream($datastream);
   // TN Datastream.

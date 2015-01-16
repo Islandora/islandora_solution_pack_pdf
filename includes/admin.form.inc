@@ -17,11 +17,24 @@ function islandora_pdf_admin($form, &$form_state) {
     $islandora_pdf_path_to_pdftotext = variable_get('islandora_pdf_path_to_pdftotext', '/usr/bin/pdftotext');
   }
   exec($islandora_pdf_path_to_pdftotext, $output, $return_value);
-  $confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>'
+  $pdftotext_confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>'
       . t('pdftotext executable found at !url', array('!url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"));
   if ($return_value != 99) {
-    $confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> '
+    $pdftotext_confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> '
         . t('Unable to find pdftotext executable at !url', array('!url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"));
+  }
+
+  if (isset($form_state['values']['islandora_pdf_path_to_gs'])) {
+    $islandora_pdf_path_to_gs = $form_state['values']['islandora_pdf_path_to_gs'];
+  }
+  else {
+    $islandora_pdf_path_to_gs = variable_get('islandora_pdf_path_to_gs', '/usr/bin/gs');
+  }
+  $gs_test_command = $islandora_pdf_path_to_gs . ' --help';
+  exec($gs_test_command, $output, $return_value);
+  $gs_confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>' . t('ghostscript executable found at !url', array('!url' => "<strong>$islandora_pdf_path_to_gs</strong>"));
+  if ($return_value != 0) {
+    $gs_confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> ' . t('Unable to find ghotscript executable at !url', array('!url' => "<strong>$islandora_pdf_path_to_gs</strong>"));
   }
 
   $form = array();
@@ -50,6 +63,13 @@ function islandora_pdf_admin($form, &$form_state) {
     '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE),
   );
 
+  $form['islandora_pdf_url_fieldset']['islandora_pdf_create_pdfa'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("Create PDF/A archival derivative from PDF"),
+    '#description' => t("Create a PDF/A version of any uploaded PDF. PDF/A is a restrictive standard that prohibits more easily broken components of the PDF spec, such as fillable forms and DRM. The PDF/A derivative will not be used for display. Requires ghostscript to be installed on the server."),
+    '#default_value' => variable_get('islandora_pdf_create_pdfa', FALSE),
+  );
+
   $form['islandora_pdf_url_fieldset']['wrapper'] = array(
     '#prefix' => '<div id="islandora-url">',
     '#suffix' => '</div>',
@@ -65,9 +85,9 @@ function islandora_pdf_admin($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Path to pdftotext executable'),
     '#default_value' => $islandora_pdf_path_to_pdftotext,
-    '#description' => t('!confirmation_message',
+    '#description' => t('!pdftotext_confirmation_message',
         array(
-          '!confirmation_message' => $confirmation_message)
+          '!pdftotext_confirmation_message' => $pdftotext_confirmation_message)
     ),
     '#ajax' => array(
       'callback' => 'islandora_update_pdftotext_url_div',
@@ -79,6 +99,29 @@ function islandora_pdf_admin($form, &$form_state) {
     '#states' => array(
       'visible' => array(
         ':input[name="islandora_pdf_create_fulltext"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  $form['islandora_pdf_url_fieldset']['wrapper']['islandora_pdf_path_to_gs'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Path to ghostscript executable'),
+    '#default_value' => $islandora_pdf_path_to_gs,
+    '#description' => t('!gs_confirmation_message',
+      array(
+        '!gs_confirmation_message' => $gs_confirmation_message,
+      )
+    ),
+    '#ajax' => array(
+      'callback' => 'islandora_update_gs_url_div',
+      'wrapper' => 'islandora-url',
+      'effect' => 'fade',
+      'event' => 'blur',
+      'progress' => array('type' => 'throbber'),
+    ),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="islandora_pdf_create_pdfa"]' => array('checked' => TRUE),
       ),
     ),
   );
@@ -147,12 +190,30 @@ function islandora_pdf_admin_validate($form, &$form_state) {
       form_set_error('', t('Cannot extract text from PDF without a valid path to pdftotext.'));
     }
   }
+  if ($form_state['values']['islandora_pdf_create_pdfa']) {
+    $islandora_pdf_path_to_gs = $form_state['values']['islandora_pdf_path_to_gs'];
+    $gs_test_command = $islandora_pdf_path_to_gs . ' --help';
+    exec($gs_test_command, $output, $return_value);
+    if ($return_value != 0) {
+      form_set_error('', t('Cannot create PDF/A without ghostscript.'));
+    }
+  }
 }
 
 /**
  * Function updates PDF to text URL div.
  */
 function islandora_update_pdftotext_url_div($form, $form_state) {
+  unset($form_state['submit_handlers']);
+  $form_state['rebuild'] = TRUE;
+
+  return $form['islandora_pdf_url_fieldset']['wrapper'];
+}
+
+/**
+ * Function updates ghostscript URL div.
+ */
+function islandora_update_gs_url_div($form, $form_state) {
   unset($form_state['submit_handlers']);
   $form_state['rebuild'] = TRUE;
 

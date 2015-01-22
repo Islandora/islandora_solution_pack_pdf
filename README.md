@@ -22,7 +22,7 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 Configure thumbnail and preview image sizes, and set the path for `pdftotext` and `gs` if extract text stream and create PDFA derivative are selected, respectively, in Administration » Islandora » PDF Collection (admin/islandora/pdf).
 
-![Configuration](http://i.imgur.com/h6OwdCT.png)
+![Configuration](https://camo.githubusercontent.com/867fb336b95875cf60116a382be4b4c72fee53fd/687474703a2f2f692e696d6775722e636f6d2f68364f776443542e706e67)
 
 ## Troubleshooting/Issues
 

@@ -33,6 +33,12 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
       'pattern' => 'islandora_pdf__',
       'variables' => array('islandora_object' => NULL),
     ),
+    'islandora_pdf_print' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-pdf-print',
+      'pattern' => 'islandora_pdf_print__',
+      'variables' => array('islandora_object' => NULL),
+    ),
   );
 }
 
@@ -87,6 +93,14 @@ function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
 function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_number, $page_size) {
   $output = theme('islandora_pdf', array('islandora_object' => $object));
   return array('' => $output);
+}
+
+/**
+ * Implements hook_islandora_view_print_object().
+ */
+function islandora_pdf_islandora_view_print_object($object) {
+  $output = theme('islandora_pdf_print', array('islandora_object' => $object));
+  return array('pdf' => $output);
 }
 
 /**

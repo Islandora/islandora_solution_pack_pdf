@@ -83,3 +83,24 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
 
   }
 }
+
+/**
+ * Prepares variables for islandora-pdf-print templates.
+ *
+ * Default template: islandora-pdf-print.tpl.php.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - islandora_object: An AbstractObject from Islandora.
+ */
+function islandora_pdf_preprocess_islandora_pdf_print(&$variables) {
+  $islandora_object = $variables['islandora_object'];
+  if (isset($islandora_object['PREVIEW'])) {
+    $preview_url = url("islandora/object/{$islandora_object->id}/datastream/PREVIEW/view");
+    $params = array(
+      'title' => $islandora_object->label,
+      'path' => $preview_url,
+    );
+    $variables['islandora_preview_img'] = theme('image', $params);
+  }
+}

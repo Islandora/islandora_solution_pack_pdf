@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Loads all required Fedora Objects, and creates an empty collection object to accept ingested PDF's.
+Loads all required Fedora Objects, and creates an empty collection object to accept PDFs.
 
 ## Requirements
 
@@ -20,9 +20,9 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 ## Configuration
 
-Configure thumbnail and preview image sizes, and set the path for `pdftotext` and `gs` if extract text stream and create PDFA derivative are selected, respectively, in Administration » Islandora » PDF Collection (admin/islandora/pdf).
+Configure thumbnail and preview image sizes, and set the path for `pdftotext` and `gs` if extract text stream and create PDFA derivative are selected, respectively, in Administration » Islandora »  Solution pack configuration »  PDF Solution Pack (admin/islandora/solution_pack_config/pdf).
 
-![Configuration](https://camo.githubusercontent.com/867fb336b95875cf60116a382be4b4c72fee53fd/687474703a2f2f692e696d6775722e636f6d2f68364f776443542e706e67)
+![Configuration](https://raw.githubusercontent.com/dmoses/islandora_screenshots/master/pdf_sp_config.jpg)
 
 ## Troubleshooting/Issues
 

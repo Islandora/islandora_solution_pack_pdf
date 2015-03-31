@@ -54,7 +54,7 @@
             <properties>
               <type>textfield</type>
               <access>TRUE</access>
-              <description>Title of the journal article.</description>
+              <description>Title of the PDF.</description>
               <required>FALSE</required>
               <title>Title</title>
               <tree>TRUE</tree>
@@ -84,7 +84,7 @@
             <properties>
               <type>textfield</type>
               <access>TRUE</access>
-              <description>Sub title of the journal article.</description>
+              <description>Sub title of the PDF.</description>
               <required>FALSE</required>
               <title>Subtitle</title>
               <tree>TRUE</tree>

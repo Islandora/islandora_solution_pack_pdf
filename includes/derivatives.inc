@@ -389,7 +389,7 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
       $ds = $object[$datastream_id];
     }
     if ($ds->mimetype != $mime_detector->getMimetype($file_uri)) {
-        $ds->mimetype = $mime_detector->getMimetype($file_uri);
+      $ds->mimetype = $mime_detector->getMimetype($file_uri);
     }
     $ds->setContentFromFile(drupal_realpath($file_uri), FALSE);
     if ($ingest) {

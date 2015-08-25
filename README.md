@@ -1,67 +1,47 @@
-BUILD STATUS
-------------
-Current build status:
-[![Build Status](https://travis-ci.org/Islandora/islandora_solution_pack_pdf.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_solution_pack_pdf)
+# PDF Solution Pack [![Build Status](https://travis-ci.org/Islandora/islandora_solution_pack_pdf.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_solution_pack_pdf)
 
-CI Server:
-http://jenkins.discoverygarden.ca
+## Introduction
 
-CONTENTS OF THIS FILE
----------------------
+Loads all required Fedora Objects, and creates an empty collection object to accept PDFs.
 
- * summary
- * requirements
- * installation
- * configuration
- * customization
- * troubleshooting
- * faq
- * contact
- * sponsors
+## Requirements
 
+This module requires the following modules/libraries:
 
-SUMMARY
--------
+* [Islandora](https://github.com/islandora/islandora)
+* [Tuque](https://github.com/islandora/tuque)
+* [ImageMagick](http://www.imagemagick.org/script/index.php) - Debian/Ubuntu `sudo apt-get install imagemagick`
+* [ImageMagick module](https://www.drupal.org/project/imagemagick)
+* [pdftotext](http://poppler.freedesktop.org) -  Debian/Ubuntu `sudo apt-get install poppler-utils`
+* [ghostscript](http://www.ghostscript.com) - Debian/Ubuntu `sudo apt-get install gs`
 
-PDF Solution Pack for Islandora
+## Installation
 
-Loads all required Fedora Objects, and creates an empty collection object to accept ingested PDF's.
+Install as usual, see [this](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
 
-TODO:
- * Add install hooks for fedora objects and variable removal.
- * Add install detection of ImageMagick.
+## Configuration
 
-REQUIREMENTS
-------------
+Configure thumbnail and preview image sizes, and set the path for `pdftotext` and `gs` if extract text stream and create PDFA derivative are selected, respectively, in Administration » Islandora »  Solution pack configuration »  PDF Solution Pack (admin/islandora/solution_pack_config/pdf).
 
-ImageMagick: http://www.imagemagick.org/script/index.php
+![Configuration](https://raw.githubusercontent.com/dmoses/islandora_screenshots/master/pdf_sp_config.jpg)
 
-INSTALLATION
-------------
+## Troubleshooting/Issues
 
-Ubuntu:
- * sudo apt-get install imagemagick
+Having problems or solved a problem? Check out the Islandora google groups for a solution.
 
+* [Islandora Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora)
+* [Islandora Dev Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora-dev)
 
-CONFIGURATION
--------------
+## Maintainers/Sponsors
 
+Current maintainers:
 
-CUSTOMIZATION
--------------
+* [Nick Ruest](https://github.com/ruebot)
 
+## Development
 
-TROUBLESHOOTING
----------------
+If you would like to contribute to this module, please check out our helpful [Documentation for Developers](https://github.com/Islandora/islandora/wiki#wiki-documentation-for-developers) info, as well as our [Developers](http://islandora.ca/developers) section on the Islandora.ca site.
 
+## License
 
-F.A.Q.
-------
-
-
-CONTACT
--------
-
-
-SPONSORS
---------
+[GPLv3](http://www.gnu.org/licenses/gpl-3.0.txt)

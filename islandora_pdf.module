@@ -10,9 +10,9 @@
  */
 function islandora_pdf_menu() {
   return array(
-    'admin/islandora/pdf' => array(
-      'title' => 'PDF Collection',
-      'description' => 'Configure the PDF Solution Pack.',
+    'admin/islandora/solution_pack_config/pdf' => array(
+      'title' => 'PDF Solution Pack',
+      'description' => 'Define ingest behavior and configure preview display.',
       'page callback' => 'drupal_get_form',
       'access arguments' => array('administer site configuration'),
       'page arguments' => array('islandora_pdf_admin'),
@@ -33,6 +33,12 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
       'pattern' => 'islandora_pdf__',
       'variables' => array('islandora_object' => NULL),
     ),
+    'islandora_pdf_print' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-pdf-print',
+      'pattern' => 'islandora_pdf_print__',
+      'variables' => array('islandora_object' => NULL),
+    ),
   );
 }
 
@@ -49,7 +55,7 @@ function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
   // DS-COMPOSITE-MODEL Datastream.
   $datastream = $pdf_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
   $datastream->label = 'DS-COMPOSITE-MODEL';
-  $datastream->mimetype = 'text/xml';
+  $datastream->mimetype = 'application/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_pdf_ds_composite_model.xml", FALSE);
   $pdf_content_model->ingestDatastream($datastream);
   // PDF Collection.
@@ -61,7 +67,7 @@ function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
   // Collection Policy Datastream.
   $datastream = $pdf_collection->constructDatastream('COLLECTION_POLICY', 'X');
   $datastream->label = 'Collection policy';
-  $datastream->mimetype = 'text/xml';
+  $datastream->mimetype = 'application/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_pdf_collection_policy.xml", FALSE);
   $pdf_collection->ingestDatastream($datastream);
   // TN Datastream.
@@ -90,6 +96,14 @@ function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_num
 }
 
 /**
+ * Implements hook_islandora_view_print_object().
+ */
+function islandora_pdf_islandora_view_print_object($object) {
+  $output = theme('islandora_pdf_print', array('islandora_object' => $object));
+  return array('pdf' => $output);
+}
+
+/**
  * Implements hook_islandora_xml_form_builder_forms().
  */
 function islandora_pdf_islandora_xml_form_builder_forms() {
@@ -102,9 +116,9 @@ function islandora_pdf_islandora_xml_form_builder_forms() {
 }
 
 /**
- * Implements hook_islandora_content_model_forms_form_associations().
+ * Implements hook_islandora_xml_form_builder_form_associations().
  */
-function islandora_pdf_islandora_content_model_forms_form_associations() {
+function islandora_pdf_islandora_xml_form_builder_form_associations() {
   return array(
     'islandora_pdf_mods_form' => array(
       'content_model' => 'islandora:sp_pdf',
@@ -162,6 +176,17 @@ function islandora_pdf_islandora_sp_pdf_islandora_derivative() {
       'weight' => '2',
       'function' => array(
         'islandora_pdf_add_fulltext_derivative',
+      ),
+      'file' => drupal_get_path('module', 'islandora_pdf') . '/includes/derivatives.inc',
+    );
+  }
+  if (variable_get('islandora_pdf_create_pdfa', FALSE)) {
+    $derivatives[] = array(
+      'source_dsid' => 'OBJ',
+      'destination_dsid' => 'PDFA',
+      'weight' => '2',
+      'function' => array(
+        'islandora_pdf_add_pdfa_derivative',
       ),
       'file' => drupal_get_path('module', 'islandora_pdf') . '/includes/derivatives.inc',
     );

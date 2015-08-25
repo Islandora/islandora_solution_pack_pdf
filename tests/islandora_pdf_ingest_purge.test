@@ -58,7 +58,7 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
       'islandora_pdf_allow_text_upload' => TRUE,
       'islandora_pdf_create_fulltext' => FALSE,
     );
-    $this->drupalPost('admin/islandora/pdf', $edit, 'Save configuration');
+    $this->drupalPost('admin/islandora/solution_pack_config/pdf', $edit, 'Save configuration');
     $edit = array(
       'image_toolkit' => 'imagemagick',
     );

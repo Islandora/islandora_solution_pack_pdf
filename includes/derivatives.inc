@@ -31,16 +31,21 @@ function islandora_pdf_get_derivative_source_as_unmanaged_file(AbstractObject $o
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of the thumbnail creation.
+ * @return array|NULL
+ *   An array describing the outcome of the thumbnail creation or NULL if no
+ *   derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE) {
-  $width = variable_get('islandora_pdf_thumbnail_width', 200);
-  $height = variable_get('islandora_pdf_thumbnail_height', 200);
-  $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
-  return islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height, $force);
+  if ($force || !isset($object['TN'])) {
+    $width = variable_get('islandora_pdf_thumbnail_width', 200);
+    $height = variable_get('islandora_pdf_thumbnail_height', 200);
+    $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
+    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height, $force);
+    file_unmanaged_delete($file_uri);
+    return $results;
+  }
 }
 
 /**
@@ -51,13 +56,15 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of the FULL_TEXT datastream creation.
+ * @return array|NULL
+ *   An array describing the outcome of the FULL_TEXT datastream creation or
+ *   NULL if no derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = FALSE) {
-  if (!isset($object['FULL_TEXT']) || (isset($object['FULL-_EXT']) && $force === TRUE)) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  if (!isset($object['FULL_TEXT']) || (isset($object['FULL_TEXT']) && $force === TRUE)) {
     if (!isset($object['OBJ'])) {
       return islandora_pdf_missing_obj_datastream($object->id);
     }
@@ -69,6 +76,7 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
     $derivative_file_uri = drupal_realpath($temp);
     $command = "$executable $source $derivative_file_uri";
     exec($command, $execout, $returncode);
+    file_unmanaged_delete($file_uri);
     $success = ($returncode === 0);
 
     if (!$success) {
@@ -90,6 +98,10 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
       );
     }
     else {
+      // Before we add this datastream let's rip out non valid XML characters.
+      $full_text = file_get_contents($derivative_file_uri);
+      $sanitized_full_text = islandora_sanitize_input_for_valid_xml($full_text);
+      file_put_contents($derivative_file_uri, $sanitized_full_text);
       $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
       if ($success === TRUE) {
         return array(
@@ -125,6 +137,77 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
 }
 
 /**
+ * Creates a PDFA archival derivative and datastream.
+ */
+function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  if (!isset($object['OBJ'])) {
+    return islandora_pdf_missing_obj_datastream($object->id);
+  }
+  $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
+  $dsid = "PDFA";
+  $source = $source = drupal_realpath($file_uri);
+  $executable = variable_get('islandora_pdf_path_to_gs', '/usr/bin/gs');
+  $temp = file_create_filename('pdfa.pdf', 'temporary://');
+  $derivative_file_uri = drupal_realpath($temp);
+  $command = "$executable -dPDFA -dNOOUTERSAVE -dUseCIEColor -sProcessColorModel=DeviceRGB -sDEVICE=pdfwrite -o $derivative_file_uri -dPDFACompatibilityPolicy=1 $source ";
+  exec($command, $execout, $returncode);
+  file_unmanaged_delete($file_uri);
+  $success = ($returncode === 0);
+
+  if (!$success) {
+    $success = array(
+      'success' => FALSE,
+      'messages' => array(
+        array(
+          'message' => t('`%command` returned an error when creating %dsid derivative of PID %pid: %error'),
+          'message_sub' => array(
+            '%command' => $command,
+            '%dsid' => $dsid,
+            '%pid' => $object->id,
+            '%error' => $execout,
+          ),
+          'type' => 'dsm',
+          'severity' => WATCHDOG_ERROR,
+        ),
+      ),
+    );
+  }
+  else {
+    $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
+    if ($success === TRUE) {
+      return array(
+        'success' => TRUE,
+        'messages' => array(
+          array(
+            'message' => t('Created PDFA derivative.'),
+            'type' => 'dsm',
+          ),
+        ),
+      );
+    }
+    else {
+      return array(
+        'success' => FALSE,
+        'messages' => array(
+          array(
+            'message' => t('Failed to create PDFA derivative for @pid. Error message: @error'),
+            'message_sub' => array(
+              '@pid' => $object->id,
+              '@error' => $success,
+            ),
+            'type' => 'watchdog',
+            'severity' => WATCHDOG_ERROR,
+          ),
+        ),
+      );
+    }
+  }
+  file_unmanaged_delete($temp);
+  return $success;
+}
+
+/**
  * Creates a JPG deriviative for the PREVIEW datastream.
  *
  * @param AbstractObject $object
@@ -132,16 +215,21 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of the PREVIEW datastream creation.
+ * @return array|NULL
+ *   An array describing the outcome of the PREVIEW datastream creation or NULL
+ *   if no derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = FALSE) {
-  $width = variable_get('islandora_pdf_preview_width', 500);
-  $height = variable_get('islandora_pdf_preview_height', 700);
-  $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
-  return islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force);
+  if ($force || !isset($object['PREVIEW'])) {
+    $width = variable_get('islandora_pdf_preview_width', 500);
+    $height = variable_get('islandora_pdf_preview_height', 700);
+    $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
+    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force);
+    file_unmanaged_delete($file_uri);
+    return $results;
+  }
 }
 
 /**
@@ -160,8 +248,9 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array
- *   An array describing the outcome of adding the JPG derivative.
+ * @return array|NULL
+ *   An array describing the outcome of adding the JPG derivative or NULL if no
+ *   derivatives are to be created or updated.
  *
  * @see hook_islandora_derivative()
  */
@@ -171,8 +260,9 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
       return islandora_pdf_missing_obj_datastream($object->id);
     }
     $derivative_file_uri = islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height);
+    file_unmanaged_delete($file_uri);
     // Receive a valid file URI to add or an error message otherwise.
-    if (file_valid_uri($derivative_file_uri)) {
+    if (!is_array($derivative_file_uri) && file_valid_uri($derivative_file_uri)) {
       $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
       file_unmanaged_delete($derivative_file_uri);
       if ($success === TRUE) {
@@ -287,6 +377,7 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
  *   TRUE if successfully added/modified the datastream, error message if not.
  */
 function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
+  $return = TRUE;
   try {
     $ingest = !isset($object[$datastream_id]);
     $mime_detector = new MimeDetect();
@@ -297,16 +388,19 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
     else {
       $ds = $object[$datastream_id];
     }
-    $ds->mimetype = $mime_detector->getMimetype($file_uri);
+    if ($ds->mimetype != $mime_detector->getMimetype($file_uri)) {
+      $ds->mimetype = $mime_detector->getMimetype($file_uri);
+    }
     $ds->setContentFromFile(drupal_realpath($file_uri), FALSE);
     if ($ingest) {
       $object->ingestDatastream($ds);
     }
-    return TRUE;
   }
   catch (exception $e) {
-    return $e->getMessage();
+    $return = $e->getMessage();
   }
+  file_unmanaged_delete($file_uri);
+  return $return;
 }
 
 /**
@@ -320,7 +414,7 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
  *
  * @see hook_islandora_derivative()
  */
-function islandora_pdf_no_obj_datastream($pid) {
+function islandora_pdf_missing_obj_datastream($pid) {
   return array(
     'success' => FALSE,
     'messages' => array(

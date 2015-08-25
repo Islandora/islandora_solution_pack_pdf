@@ -122,7 +122,7 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
       $preview = bin2hex($object['PREVIEW']->content);
       $preview_scanmarker = strpos($preview, 'ffda');
       $preview_scan_startpos = $preview_scanmarker + hexdec(substr($preview, $preview_scanmarker + 4, 4)) + 8;
-      $preview_scan_data = substr($preview, $preview_scan_startpos, strlen($object) - $preview_scan_startpos - 6);
+      $preview_scan_data = substr($preview, $preview_scan_startpos, strlen($object['PREVIEW']->content) - $preview_scan_startpos - 6);
       if (intval($preview_scan_data, 16) === 0) {
         $this->fail('PREVIEW datastream is a completely black JPEG image', 'Islandora');
       }

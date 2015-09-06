@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file contains all theme and preprocess functions
+ * This file contains all theme and preprocess functions.
  */
 
 /**
@@ -14,7 +14,7 @@
  *   An associative array containing:
  *   - islandora_object: An AbstractObject from Islandora.
  */
-function islandora_pdf_preprocess_islandora_pdf(&$variables) {
+function islandora_pdf_preprocess_islandora_pdf(array &$variables) {
   drupal_add_js('misc/form.js');
   drupal_add_js('misc/collapse.js');
   $islandora_object = $variables['islandora_object'];
@@ -23,17 +23,6 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   module_load_include('inc', 'islandora', 'includes/metadata');
 
-  // We should eventually remove the DC object and dc_array code as it only
-  // exists to not break legacy implementations.
-  try {
-    if (isset($islandora_object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
-      $dc = $islandora_object['DC']->content;
-      $dc_object = DublinCore::importFromXMLString($dc);
-    }
-  }
-  catch (Exception $e) {
-    drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
-  }
   $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
   $variables['dc_array'] = isset($dc_object) ? $dc_object->asArray() : array();
   $variables['islandora_object_label'] = $islandora_object->label;
@@ -93,7 +82,7 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
  *   An associative array containing:
  *   - islandora_object: An AbstractObject from Islandora.
  */
-function islandora_pdf_preprocess_islandora_pdf_print(&$variables) {
+function islandora_pdf_preprocess_islandora_pdf_print(array &$variables) {
   $islandora_object = $variables['islandora_object'];
   if (isset($islandora_object['PREVIEW'])) {
     $preview_url = url("islandora/object/{$islandora_object->id}/datastream/PREVIEW/view");

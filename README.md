@@ -13,7 +13,7 @@ This module requires the following modules/libraries:
 * [ImageMagick](http://www.imagemagick.org/script/index.php) - Debian/Ubuntu `sudo apt-get install imagemagick`
 * [ImageMagick module](https://www.drupal.org/project/imagemagick)
 * [pdftotext](http://poppler.freedesktop.org) -  Debian/Ubuntu `sudo apt-get install poppler-utils`
-* [ghostscript](http://www.ghostscript.com) - Debian/Ubuntu `sudo apt-get install gs`
+* [ghostscript](http://www.ghostscript.com) - Debian/Ubuntu `sudo apt-get install ghostscript`
 
 ## Installation
 

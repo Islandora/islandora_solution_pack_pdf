@@ -71,7 +71,7 @@ function islandora_pdf_pdf_upload_form(array $form, array &$form_state) {
  */
 function islandora_pdf_pdf_upload_form_submit(array $form, array &$form_state) {
   $object = $form_state['islandora']['objects'][0];
-  if($form_state['values']['file']) {
+  if ($form_state['values']['file']) {
     if (empty($object['OBJ'])) {
       $ds = $object->constructDatastream('OBJ', 'M');
       $object->ingestDatastream($ds);

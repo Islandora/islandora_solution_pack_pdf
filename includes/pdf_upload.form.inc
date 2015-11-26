@@ -19,10 +19,12 @@
 function islandora_pdf_pdf_upload_form(array $form, array &$form_state) {
   $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
   $extensions = array('pdf');
+  $upload_required = variable_get('islandora_require_obj_upload', TRUE);
   $form = array();
   $form['file'] = array(
     '#title' => t('PDF File'),
     '#type' => 'managed_file',
+    '#required' => $upload_required,
     '#description' => t('Select file to upload.<br/>Files must be less than <strong>@size MB.</strong><br/>Allowed file types: <strong>@ext.</strong>', array('@size' => $upload_size, '@ext' => $extensions[0])),
     '#default_value' => isset($form_state['values']['files']) ? $form_state['values']['files'] : NULL,
     '#upload_location' => 'temporary://',

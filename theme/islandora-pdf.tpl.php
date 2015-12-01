@@ -14,9 +14,9 @@
       <div class="islandora-pdf-content">
         <?php print $islandora_content; ?>
       </div>
-      <?php if (isset($islandora_download_link)): ?>
-        <?php print $islandora_download_link; ?>
-      <?php endif; ?>
+    <?php endif; ?>
+    <?php if (isset($islandora_download_link)): ?>
+      <?php print $islandora_download_link; ?>
     <?php endif; ?>
   </div>
   <div class="islandora-pdf-metadata">

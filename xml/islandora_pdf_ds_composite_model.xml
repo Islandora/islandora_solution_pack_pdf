@@ -12,7 +12,7 @@
   <dsTypeModel ID="RELS-INT" optional="true">
     <form FORMAT_URI="info:fedora/fedora-system:FedoraRELSInt-1.0" MIME="application/rdf+xml"/>
   </dsTypeModel>
-  <dsTypeModel ID="OBJ">
+  <dsTypeModel ID="OBJ" optional="true">
     <form MIME="application/pdf"/>
   </dsTypeModel>
   <dsTypeModel ID="PDFA">

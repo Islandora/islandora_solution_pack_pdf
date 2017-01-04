@@ -80,8 +80,11 @@ function islandora_pdf_preprocess_islandora_pdf(&$variables) {
         'title' => $islandora_object->label,
         'path' => $preview_url,
       );
+
       $variables['islandora_preview_img'] = theme('image', $params);
-      $variables['islandora_content'] = l($variables['islandora_preview_img'], $variables['islandora_full_url'], array('html' => TRUE));
+      $variables['islandora_full_url'] = NULL;
+      $variables['islandora_content'] = isset($variables['islandora_full_url']) ? l($variables['islandora_preview_img'], $variables['islandora_full_url'], array('html' => TRUE)) :
+        $variables['islandora_preview_img'];
     }
   }
 }

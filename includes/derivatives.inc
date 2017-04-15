@@ -317,50 +317,28 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
  *   The height to make the derived datastream.
  *
  * @return string|array
- *   A URI to the generated derivative if successful, error message otherwise.
+ *   A URI to the generated derivative if successful, otherwise. FALSE
  *
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) {
-  $source = drupal_realpath($file_uri) . '[0]';
-  $matches = array();
-  // Get the base name of the source file.
-  $base = pathinfo($source, PATHINFO_FILENAME);
-  $temp = file_create_filename("$base.$dsid.jpg", 'temporary://');
-  $dest = drupal_realpath($temp);
-  $args['quality'] = '-quality ' . escapeshellarg(variable_get('imagemagick_quality', 75));
+  $src = drupal_realpath($file_uri);
+  $base = pathinfo($src, PATHINFO_FILENAME);
+  $dest = "temporary://$base.$dsid.jpg";
+  // magemagick_convert used drupal_realpath to resolve path.
+  // drupal_realpath requires file to exist so creates a blank file at the dest
+  $dest = file_unmanaged_save_data('', $dest, FILE_EXISTS_REPLACE);
+ 
+  $args = array();
   $args['previewsize'] = '-resize ' . escapeshellarg("{$width}x{$height}");
   $args['colors'] = '-colorspace RGB';
   $args['flatten'] = '-flatten';
-  $context = array(
-    'source' => $source,
-    'destination' => $dest,
-  );
-  drupal_alter('imagemagick_arguments', $args, $context);
-  // To make use of ImageMagick 6's parenthetical command grouping we need to
-  // make the $source image the first parameter and $dest the last.
-  // See http://www.imagemagick.org/Usage/basics/#cmdline
-  $command = escapeshellarg($source) . ' ' . implode(' ', $args) . ' ' . escapeshellarg("jpg:$dest");
-  $output = '';
-  $ret = -1;
-  if (_imagemagick_convert_exec($command, $output, $ret) !== TRUE) {
-    return array(
-      'success' => FALSE,
-      'messages' => array(
-        array(
-          'message' => t('ImageMagick failed to create derivatives for @pid<br/>Error: @ret<br/>Command: @command<br/>Output: @output'),
-          'message_sub' => array(
-            '@ret' => $ret,
-            '@command' => $command,
-            '@output' => $output,
-          ),
-          'type' => 'watchdog',
-          'severity' => WATCHDOG_ERROR,
-        ),
-      ),
-    );
+
+  if (_imagemagick_convert($src, $dest, $args) !== TRUE) {
+    return FALSE;
+    // NOTE: enable Imagemagick's debugmode for details
   }
-  return $temp;
+  return $dest;
 }
 
 /**

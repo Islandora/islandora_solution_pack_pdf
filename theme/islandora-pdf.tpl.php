@@ -10,6 +10,7 @@
 
 <div class="islandora-pdf-object islandora" vocab="http://schema.org/" prefix="dcterms: http://purl.org/dc/terms/" typeof="Article">
   <div class="islandora-pdf-content-wrapper clearfix">
+    <?php print theme('islandora_solr_search_return_link'); ?>
     <?php if (isset($islandora_content)): ?>
       <div class="islandora-pdf-content">
         <?php print $islandora_content; ?>

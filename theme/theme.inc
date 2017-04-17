@@ -14,7 +14,7 @@
  *   An associative array containing:
  *   - islandora_object: An AbstractObject from Islandora.
  */
-function islandora_pdf_preprocess_islandora_pdf(&$variables) {
+function template_preprocess_islandora_pdf(&$variables) {
   drupal_add_js('misc/form.js');
   drupal_add_js('misc/collapse.js');
   $islandora_object = $variables['islandora_object'];

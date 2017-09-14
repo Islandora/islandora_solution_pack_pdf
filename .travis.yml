@@ -33,6 +33,8 @@ branches:
   only:
     - /^7.x/
 before_install:
+  - convert -version
+  - gs -v
   - cd $HOME
   - git clone -b 7.x git://github.com/Islandora/islandora.git
   - git clone -b 7.x git://github.com/Islandora/islandora_solution_pack_collection.git

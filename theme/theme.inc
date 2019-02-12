@@ -28,7 +28,7 @@ function template_preprocess_islandora_pdf(array &$variables) {
   try {
     if (isset($islandora_object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
       $dc = $islandora_object['DC']->content;
-      $dc_object = DublinCore::importFromXMLString($dc);
+      $dc_object = DublinCore::importFromXmlString($dc);
     }
   }
   catch (Exception $e) {

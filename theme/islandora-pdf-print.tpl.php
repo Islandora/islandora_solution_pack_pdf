@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This is the template file for the print pdf object
+ * This is the template file for the print pdf object.
  *
  * @TODO: Add documentation about this file and the available variables
  * $islandora_object - the object being displayed

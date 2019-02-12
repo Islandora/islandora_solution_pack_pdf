@@ -31,7 +31,7 @@ function islandora_pdf_get_derivative_source_as_unmanaged_file(AbstractObject $o
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array|NULL
+ * @return array|null
  *   An array describing the outcome of the thumbnail creation or NULL if no
  *   derivatives are to be created or updated.
  *
@@ -56,7 +56,7 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array|NULL
+ * @return array|null
  *   An array describing the outcome of the FULL_TEXT datastream creation or
  *   NULL if no derivatives are to be created or updated.
  *
@@ -215,7 +215,7 @@ function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALS
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array|NULL
+ * @return array|null
  *   An array describing the outcome of the PREVIEW datastream creation or NULL
  *   if no derivatives are to be created or updated.
  *
@@ -248,7 +248,7 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array|NULL
+ * @return array|null
  *   An array describing the outcome of adding the JPG derivative or NULL if no
  *   derivatives are to be created or updated.
  *
@@ -376,7 +376,7 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
  * @return bool|string
  *   TRUE if successfully added/modified the datastream, error message if not.
  */
-function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
+function islandora_pdf_add_datastream(AbstractObject $object, $datastream_id, $file_uri) {
   $return = TRUE;
   try {
     $ingest = !isset($object[$datastream_id]);

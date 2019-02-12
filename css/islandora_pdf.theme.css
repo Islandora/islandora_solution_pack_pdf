@@ -10,7 +10,7 @@ a.islandora-pdf-link {
 }
 
 .islandora-pdf-content {
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   border: 1px solid #ddd;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -33,11 +33,11 @@ a.islandora-pdf-link {
 
 /* This is kept for legacy reasons */
 dl.islandora-pdf-fields {
-  width:100%;
+  width: 100%;
 }
 
 dl.islandora-metadata-fields {
-    width:100%;
+  width: 100%;
 }
 
 .islandora-pdf-metadata dt {
@@ -54,17 +54,17 @@ dl.islandora-metadata-fields {
 
 .islandora-pdf-metadata dt,
 .islandora-pdf-metadata dd {
-  border-top:1px solid #e5e5e5;
+  border-top: 1px solid #e5e5e5;
 }
 
 .islandora-pdf-metadata dt.first,
 .islandora-pdf-metadata dd.first {
-  border-top:0;
+  border-top: 0;
 }
 
 body.two-sidebars .islandora-pdf-sidebar {
-    clear: both;
-    width: 100%;
+  clear: both;
+  width: 100%;
 }
 
 @media all and (min-width: 768px) {

@@ -87,7 +87,8 @@ function islandora_pdf_admin($form, &$form_state) {
     '#default_value' => $islandora_pdf_path_to_pdftotext,
     '#description' => t('!pdftotext_confirmation_message',
         array(
-          '!pdftotext_confirmation_message' => $pdftotext_confirmation_message)
+          '!pdftotext_confirmation_message' => $pdftotext_confirmation_message,
+        )
     ),
     '#ajax' => array(
       'callback' => 'islandora_update_pdftotext_url_div',

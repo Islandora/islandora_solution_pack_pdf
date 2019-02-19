@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file contains all theme and preprocess functions
+ * This file contains all theme and preprocess functions.
  */
 
 /**
@@ -14,7 +14,7 @@
  *   An associative array containing:
  *   - islandora_object: An AbstractObject from Islandora.
  */
-function template_preprocess_islandora_pdf(&$variables) {
+function template_preprocess_islandora_pdf(array &$variables) {
   drupal_add_js('misc/form.js');
   drupal_add_js('misc/collapse.js');
   $islandora_object = $variables['islandora_object'];
@@ -28,7 +28,7 @@ function template_preprocess_islandora_pdf(&$variables) {
   try {
     if (isset($islandora_object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
       $dc = $islandora_object['DC']->content;
-      $dc_object = DublinCore::importFromXMLString($dc);
+      $dc_object = DublinCore::importFromXmlString($dc);
     }
   }
   catch (Exception $e) {
@@ -97,7 +97,7 @@ function template_preprocess_islandora_pdf(&$variables) {
  *   An associative array containing:
  *   - islandora_object: An AbstractObject from Islandora.
  */
-function template_preprocess_islandora_pdf_print(&$variables) {
+function template_preprocess_islandora_pdf_print(array &$variables) {
   $islandora_object = $variables['islandora_object'];
   if (isset($islandora_object['PREVIEW'])) {
     $preview_url = url("islandora/object/{$islandora_object->id}/datastream/PREVIEW/view");

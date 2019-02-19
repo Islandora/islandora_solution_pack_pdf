@@ -2,9 +2,12 @@
 
 /**
  * @file
- * Attempts to ingest a PDF into a randomly generated PDF collection
+ * Attempts to ingest a PDF into a randomly generated PDF collection.
  */
 
+/**
+ * Test PDF functionality.
+ */
 class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
 
   /**
@@ -132,4 +135,5 @@ class IslandoraPdfIngestTestCase extends IslandoraCollectionWebTestCase {
     $this->deleteObject($object);
     $this->deleteTestCollection($collectionpid);
   }
+
 }

@@ -22,3 +22,13 @@ function islandora_pdf_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   islandora_install_solution_pack('islandora_pdf', 'uninstall');
 }
+
+/**
+ * Maintain existing RGB colorspace profile configuration.
+ */
+function islandora_pdf_update_7001(&$sandbox) {
+  variable_set('islandora_pdf_preview_colorspace', 'RGB');
+  variable_set('islandora_pdf_thumbnail_colorspace', 'RGB');
+  $t = get_t();
+  return $t('Set colorspace configuration to RBG to maintain existing functionality.');
+}

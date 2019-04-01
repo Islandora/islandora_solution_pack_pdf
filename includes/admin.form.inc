@@ -151,6 +151,19 @@ function islandora_pdf_admin($form, &$form_state) {
     '#size' => 5,
   );
 
+  $form['islandora_pdf_thumbnail_fieldset']['islandora_pdf_thumbnail_colorspace'] = array(
+    '#type' => 'select',
+    '#title' => t('Colorspace'),
+    '#options' => array(
+      'sRGB' => t('sRGB'),
+      'RGB' => t('RGB'),
+      'CMYK' => t('CMYK'),
+      'Gray' => t('Grayscale'),
+    ),
+    '#description' => t('The colorspace for the derived thumbnail.'),
+    '#default_value' => variable_get('islandora_pdf_thumbnail_colorspace', 'sRGB'),
+  );
+
   $form['islandora_pdf_preview_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Preview image'),
@@ -173,6 +186,19 @@ function islandora_pdf_admin($form, &$form_state) {
     '#element_validate' => array('element_validate_number'),
     '#default_value' => variable_get('islandora_pdf_preview_height', 700),
     '#size' => 5,
+  );
+
+  $form['islandora_pdf_preview_fieldset']['islandora_pdf_preview_colorspace'] = array(
+    '#type' => 'select',
+    '#title' => t('Colorspace'),
+    '#options' => array(
+      'sRGB' => t('sRGB'),
+      'RGB' => t('RGB'),
+      'CMYK' => t('CMYK'),
+      'Gray' => t('Grayscale'),
+    ),
+    '#description' => t('The colorspace for the derived preview.'),
+    '#default_value' => variable_get('islandora_pdf_preview_colorspace', 'sRGB'),
   );
 
   module_load_include('inc', 'islandora', 'includes/solution_packs');

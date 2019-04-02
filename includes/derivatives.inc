@@ -319,7 +319,7 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
  *   The width to make the derived datastream.
  * @param int $height
  *   The height to make the derived datastream.
- * @param int $colorspace
+ * @param string $colorspace
  *   The colorspace for the derived datastream.
  *
  * @return string|array

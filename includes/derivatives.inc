@@ -327,7 +327,13 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
  *
  * @see hook_islandora_derivative()
  */
-function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height, $colorspace) {
+function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height, $colorspace = NULL) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  if (is_null($colorspace)) {
+    $colorspace = 'sRGB';
+    $message = islandora_deprecated('7.x-1.12', t('The colorspace now needs to be specified in islandora_pdf_create_jpg_derivative'));
+    trigger_error(filter_xss($message), E_USER_DEPRECATED);
+  }
   $source = drupal_realpath($file_uri) . '[0]';
   $matches = array();
   // Get the base name of the source file.

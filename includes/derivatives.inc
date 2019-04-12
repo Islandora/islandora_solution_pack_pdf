@@ -43,7 +43,7 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
     $height = variable_get('islandora_pdf_thumbnail_height', 200);
     $colorspace = variable_get('islandora_pdf_thumbnail_colorspace', 'sRGB');
     $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
-    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height, $colorspace, $force);
+    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height, $force, $colorspace);
     file_unmanaged_delete($file_uri);
     return $results;
   }
@@ -228,7 +228,7 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
     $height = variable_get('islandora_pdf_preview_height', 700);
     $colorspace = variable_get('islandora_pdf_preview_colorspace', 'sRGB');
     $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
-    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $colorspace, $force);
+    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force, $colorspace);
     file_unmanaged_delete($file_uri);
     return $results;
   }
@@ -247,10 +247,10 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  *   The width to make the derived datastream.
  * @param int $height
  *   The height to make the derived datastream.
- * @param string $colorspace
- *   The colorspace for the derived datastream.
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
+ * @param string $colorspace
+ *   The colorspace for the derived datastream.
  *
  * @return array|null
  *   An array describing the outcome of adding the JPG derivative or NULL if no
@@ -258,7 +258,7 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  *
  * @see hook_islandora_derivative()
  */
-function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $dsid, $width, $height, $colorspace, $force) {
+function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $dsid, $width, $height, $force, $colorspace = NULL) {
   if (!isset($object[$dsid]) || (isset($object[$dsid]) && $force === TRUE)) {
     if (!isset($object['OBJ'])) {
       return islandora_pdf_missing_obj_datastream($object->id);

@@ -21,4 +21,28 @@ function islandora_pdf_install() {
 function islandora_pdf_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   islandora_install_solution_pack('islandora_pdf', 'uninstall');
+  $variables = array(
+    'islandora_pdf_path_to_pdftotext',
+    'islandora_pdf_path_to_gs',
+    'islandora_pdf_allow_text_upload',
+    'islandora_pdf_create_fulltext',
+    'islandora_pdf_create_pdfa',
+    'islandora_pdf_thumbnail_width',
+    'islandora_pdf_thumbnail_height',
+    'islandora_pdf_thumbnail_colorspace',
+    'islandora_pdf_preview_width',
+    'islandora_pdf_preview_height',
+    'islandora_pdf_preview_colorspace',
+  );
+  array_walk($variables, 'variable_del');
+}
+
+/**
+ * Maintain existing RGB colorspace profile configuration.
+ */
+function islandora_pdf_update_7001(&$sandbox) {
+  variable_set('islandora_pdf_preview_colorspace', 'RGB');
+  variable_set('islandora_pdf_thumbnail_colorspace', 'RGB');
+  $t = get_t();
+  return $t('Set colorspace configuration to RBG to maintain existing profile.');
 }

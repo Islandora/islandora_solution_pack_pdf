@@ -41,8 +41,9 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
   if ($force || !isset($object['TN'])) {
     $width = variable_get('islandora_pdf_thumbnail_width', 200);
     $height = variable_get('islandora_pdf_thumbnail_height', 200);
+    $colorspace = variable_get('islandora_pdf_thumbnail_colorspace', 'sRGB');
     $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
-    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height, $force);
+    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'TN', $width, $height, $force, $colorspace);
     file_unmanaged_delete($file_uri);
     return $results;
   }
@@ -225,8 +226,9 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
   if ($force || !isset($object['PREVIEW'])) {
     $width = variable_get('islandora_pdf_preview_width', 500);
     $height = variable_get('islandora_pdf_preview_height', 700);
+    $colorspace = variable_get('islandora_pdf_preview_colorspace', 'sRGB');
     $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
-    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force);
+    $results = islandora_pdf_add_jpg_derivative($object, $file_uri, 'PREVIEW', $width, $height, $force, $colorspace);
     file_unmanaged_delete($file_uri);
     return $results;
   }
@@ -247,6 +249,8 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  *   The height to make the derived datastream.
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
+ * @param string $colorspace
+ *   The colorspace for the derived datastream.
  *
  * @return array|null
  *   An array describing the outcome of adding the JPG derivative or NULL if no
@@ -254,12 +258,12 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  *
  * @see hook_islandora_derivative()
  */
-function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $dsid, $width, $height, $force) {
+function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $dsid, $width, $height, $force, $colorspace = NULL) {
   if (!isset($object[$dsid]) || (isset($object[$dsid]) && $force === TRUE)) {
     if (!isset($object['OBJ'])) {
       return islandora_pdf_missing_obj_datastream($object->id);
     }
-    $derivative_file_uri = islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height);
+    $derivative_file_uri = islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height, $colorspace);
     file_unmanaged_delete($file_uri);
     // Receive a valid file URI to add or an error message otherwise.
     if (!is_array($derivative_file_uri) && file_valid_uri($derivative_file_uri)) {
@@ -315,13 +319,21 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
  *   The width to make the derived datastream.
  * @param int $height
  *   The height to make the derived datastream.
+ * @param string $colorspace
+ *   The colorspace for the derived datastream.
  *
  * @return string|array
  *   A URI to the generated derivative if successful, error message otherwise.
  *
  * @see hook_islandora_derivative()
  */
-function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) {
+function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height, $colorspace = NULL) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  if (is_null($colorspace)) {
+    $colorspace = 'sRGB';
+    $message = islandora_deprecated('7.x-1.12', t('The colorspace now needs to be specified in islandora_pdf_create_jpg_derivative'));
+    trigger_error(filter_xss($message), E_USER_DEPRECATED);
+  }
   $source = drupal_realpath($file_uri) . '[0]';
   $matches = array();
   // Get the base name of the source file.
@@ -330,7 +342,7 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
   $dest = drupal_realpath($temp);
   $args['quality'] = '-quality ' . escapeshellarg(variable_get('imagemagick_quality', 75));
   $args['previewsize'] = '-resize ' . escapeshellarg("{$width}x{$height}");
-  $args['colors'] = '-colorspace RGB';
+  $args['colors'] = "-colorspace {$colorspace}";
   $args['flatten'] = '-flatten';
   $context = array(
     'source' => $source,

@@ -156,14 +156,14 @@ function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALS
   // XXX. As of Ghostscript version 9.11, the use of -dUseCIEColor is not
   // recommended.
   // see https://ghostscript.com/pipermail/gs-devel/2014-July/009693.html.
+  $use_ci_color = "-dUseCIEColor";
   $version_command = "$executable --version";
   exec($version_command, $version);
+
   if ($version[0] >= $min_version) {
-    $command = "$executable -dPDFA -dNOOUTERSAVE -sProcessColorModel=DeviceRGB -sDEVICE=pdfwrite -o $derivative_file_uri -dPDFACompatibilityPolicy=1 $source ";
+    $use_ci_color = "";
   }
-  else {
-    $command = "$executable -dPDFA -dNOOUTERSAVE -dUseCIEColor -sProcessColorModel=DeviceRGB -sDEVICE=pdfwrite -o $derivative_file_uri -dPDFACompatibilityPolicy=1 $source ";
-  }
+  $command = "$executable -dPDFA -dNOOUTERSAVE $use_ci_color -sProcessColorModel=DeviceRGB -sDEVICE=pdfwrite -o $derivative_file_uri -dPDFACompatibilityPolicy=1 $source ";
   exec($command, $execout, $returncode);
   file_unmanaged_delete($file_uri);
   $success = ($returncode === 0);

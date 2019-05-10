@@ -56,7 +56,7 @@ function islandora_pdf_update_7100(&$sandbox) {
   $executable = variable_get('islandora_pdf_path_to_gs', '/usr/bin/gs');
   $version_command = "$executable --version";
   exec($version_command, $installed_version);
-  if (version_compare($min_version, $installed_version[0], '>=')) {
+  if (version_compare($installed_version[0], $min_version, '>=')) {
     variable_set('islandora_pdf_use_duseciecolor', FALSE);
   }
   else {

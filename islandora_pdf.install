@@ -33,6 +33,7 @@ function islandora_pdf_uninstall() {
     'islandora_pdf_preview_width',
     'islandora_pdf_preview_height',
     'islandora_pdf_preview_colorspace',
+    'islandora_pdf_use_duseciecolor',
   );
   array_walk($variables, 'variable_del');
 }

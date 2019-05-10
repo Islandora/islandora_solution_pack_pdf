@@ -48,6 +48,18 @@ function islandora_pdf_update_7001(&$sandbox) {
   return $t('Set colorspace configuration to RBG to maintain existing profile.');
 }
 
-function islandora_pdf_update_7002(&$sandbox) {
-  variable_set('islandora_pdf_use_duseciecolor', FALSE);
+/**
+ * Set and maintain new dUseCIEColor switch variable.
+ */
+function islandora_pdf_update_7100(&$sandbox) {
+  $min_version = "9.11";
+  $executable = variable_get('islandora_pdf_path_to_gs', '/usr/bin/gs');
+  $version_command = "$executable --version";
+  exec($version_command, $installed_version);
+  if (version_compare($min_version, $installed_version[0], '>=')) {
+    variable_set('islandora_pdf_use_duseciecolor', FALSE);
+  }
+  else {
+    variable_set('islandora_pdf_use_duseciecolor', TRUE);
+  }
 }

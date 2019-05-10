@@ -76,7 +76,9 @@ function islandora_pdf_admin($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t("Use dUseCIEColor when generating PDFA datastream."),
     '#description' => t("As of GhostScript 9.11, the use of the dUseCIEColor switch is not recommended. See https://ghostscript.com/pipermail/gs-devel/2014-July/009693.html.
-                          </br>Version installed: $version[0]."),
+                          </br>Version installed: !version.", array(
+                            '!version' => $version[0],
+                          )),
     '#default_value' => variable_get('islandora_pdf_use_duseciecolor', FALSE),
   );
 

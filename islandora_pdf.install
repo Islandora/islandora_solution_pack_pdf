@@ -47,3 +47,7 @@ function islandora_pdf_update_7001(&$sandbox) {
   $t = get_t();
   return $t('Set colorspace configuration to RBG to maintain existing profile.');
 }
+
+function islandora_pdf_update_7002(&$sandbox) {
+  variable_set('islandora_pdf_use_duseciecolor', FALSE);
+}

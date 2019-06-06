@@ -332,7 +332,9 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height, 
   if (is_null($colorspace)) {
     $colorspace = 'sRGB';
     $message = islandora_deprecated('7.x-1.12', t('The colorspace now needs to be specified in islandora_pdf_create_jpg_derivative'));
+    // @codingStandardsIgnoreStart
     trigger_error(filter_xss($message), E_USER_DEPRECATED);
+    // @codingStandardsIgnoreEnd
   }
   $source = drupal_realpath($file_uri) . '[0]';
   $matches = array();

@@ -9,7 +9,6 @@
  * Admin form function.
  */
 function islandora_pdf_admin($form, &$form_state) {
-
   if (isset($form_state['values']['islandora_pdf_path_to_pdftotext'])) {
     $islandora_pdf_path_to_pdftotext = $form_state['values']['islandora_pdf_path_to_pdftotext'];
   }
@@ -68,6 +67,19 @@ function islandora_pdf_admin($form, &$form_state) {
     '#title' => t("Create PDF/A archival derivative from PDF"),
     '#description' => t("Create a PDF/A version of any uploaded PDF. PDF/A is a restrictive standard that prohibits more easily broken components of the PDF spec, such as fillable forms and DRM. The PDF/A derivative will not be used for display. Requires ghostscript to be installed on the server."),
     '#default_value' => variable_get('islandora_pdf_create_pdfa', FALSE),
+  );
+
+  $executable = variable_get('islandora_pdf_path_to_gs', '/usr/bin/gs');
+  $version_command = "$executable --version";
+  exec($version_command, $version);
+  $form['islandora_pdf_url_fieldset']['islandora_pdf_use_duseciecolor'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("Use dUseCIEColor when generating PDFA datastream."),
+    '#description' => t("As of GhostScript 9.11, the use of the dUseCIEColor switch is not recommended. See https://ghostscript.com/pipermail/gs-devel/2014-July/009693.html.
+                          </br>Version installed: !version.", array(
+                            '!version' => $version[0],
+                          )),
+    '#default_value' => variable_get('islandora_pdf_use_duseciecolor', FALSE),
   );
 
   $form['islandora_pdf_url_fieldset']['wrapper'] = array(

@@ -151,7 +151,15 @@ function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALS
   $executable = variable_get('islandora_pdf_path_to_gs', '/usr/bin/gs');
   $temp = file_create_filename('pdfa.pdf', 'temporary://');
   $derivative_file_uri = drupal_realpath($temp);
-  $command = "$executable -dPDFA -dNOOUTERSAVE -dUseCIEColor -sProcessColorModel=DeviceRGB -sDEVICE=pdfwrite -o $derivative_file_uri -dPDFACompatibilityPolicy=1 $source ";
+
+  // XXX. As of Ghostscript version 9.11, the use of -dUseCIEColor is not
+  // recommended.
+  // see https://ghostscript.com/pipermail/gs-devel/2014-July/009693.html.
+  $use_ci_color = "";
+  if (variable_get('islandora_pdf_use_duseciecolor', FALSE)) {
+    $use_ci_color = "-dUseCIEColor";
+  }
+  $command = "$executable -dPDFA -dNOOUTERSAVE $use_ci_color -sProcessColorModel=DeviceRGB -sDEVICE=pdfwrite -o $derivative_file_uri -dPDFACompatibilityPolicy=1 $source ";
   exec($command, $execout, $returncode);
   file_unmanaged_delete($file_uri);
   $success = ($returncode === 0);

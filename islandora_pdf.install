@@ -33,6 +33,7 @@ function islandora_pdf_uninstall() {
     'islandora_pdf_preview_width',
     'islandora_pdf_preview_height',
     'islandora_pdf_preview_colorspace',
+    'islandora_pdf_use_duseciecolor',
   );
   array_walk($variables, 'variable_del');
 }
@@ -45,4 +46,20 @@ function islandora_pdf_update_7001(&$sandbox) {
   variable_set('islandora_pdf_thumbnail_colorspace', 'RGB');
   $t = get_t();
   return $t('Set colorspace configuration to RBG to maintain existing profile.');
+}
+
+/**
+ * Set and maintain new dUseCIEColor switch variable.
+ */
+function islandora_pdf_update_7100(&$sandbox) {
+  $min_version = "9.11";
+  $executable = variable_get('islandora_pdf_path_to_gs', '/usr/bin/gs');
+  $version_command = "$executable --version";
+  exec($version_command, $installed_version);
+  if (version_compare($installed_version[0], $min_version, '>=')) {
+    variable_set('islandora_pdf_use_duseciecolor', FALSE);
+  }
+  else {
+    variable_set('islandora_pdf_use_duseciecolor', TRUE);
+  }
 }

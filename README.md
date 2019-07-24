@@ -26,7 +26,7 @@ Configuration options are found at Administration » Islandora »  Solution pack
 
 * whether users are allowed to upload .txt files along with the PDFs, to be used for full text indexing
 * whether text streams should be extracted automatically from the PDFs using pdftotext. If enabled, the path to `pdftotext` should be provided
-* whether PDFA derivatives should be created. If enabled, the path to `gs` (GhostScript) should be provided
+* whether PDF/A derivatives should be created. If enabled, the path to `gs` (GhostScript) should be provided
 * image sizes for thumbnail and preview derivatives, as well as color spaces that should be used for generating them
 * whether the dUseCIEColor switch should be used for GhostScript. Not recommended for GhostScript versions 9.11 or higher
 

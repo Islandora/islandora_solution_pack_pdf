@@ -22,7 +22,14 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 ## Configuration
 
-Configure thumbnail and preview image sizes, and set the path for `pdftotext` and `gs` if extract text stream and create PDFA derivative are selected, respectively, in Administration » Islandora »  Solution pack configuration »  PDF Solution Pack (admin/islandora/solution_pack_config/pdf).
+Configuration options are found at Administration » Islandora »  Solution pack configuration »  PDF Solution Pack (admin/islandora/solution_pack_config/pdf) and include:
+
+* whether users are allowed to upload .txt files along with the PDFs, to be used for full text indexing
+* whether text streams should be extracted automatically from the PDFs using pdftotext. If enabled, the path to `pdftotext` should be provided
+* whether PDFA derivatives should be created. If enabled, the path to `gs` (GhostScript) should be provided
+* image sizes for thumbnail and preview derivatives, as well as color spaces that should be used for generating them
+* whether the dUseCIEColor switch should be used for GhostScript. Not recommended for GhostScript versions 9.11 or higher
+
 
 ![Configuration](https://user-images.githubusercontent.com/10065857/61782954-4361d580-ae07-11e9-83d2-77900f8f76fb.png)
 

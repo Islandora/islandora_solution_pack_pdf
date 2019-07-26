@@ -29,6 +29,7 @@ Configuration options are found at Administration » Islandora »  Solution pack
 * whether PDF/A derivatives should be created. If enabled, the path to `gs` (GhostScript) should be provided
 * image sizes for thumbnail and preview derivatives, as well as color spaces that should be used for generating them
 * whether the dUseCIEColor switch should be used for GhostScript. Not recommended for GhostScript versions 9.11 or higher
+* which viewer should be used
 
 
 ![Configuration](https://user-images.githubusercontent.com/10065857/61782954-4361d580-ae07-11e9-83d2-77900f8f76fb.png)
